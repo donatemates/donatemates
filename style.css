@@ -285,6 +285,7 @@ button:active {
 
 p {
   margin-top: 20px;
+  padding: 0 15px;
   font-size: 1.5em;
   line-height: 140%;
   color: #AAAAAA;
