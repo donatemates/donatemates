@@ -340,6 +340,10 @@ p {
 }
 
 @media (max-width: 480px) {
+  .progress-bar {
+    border-right-width: 0;
+  }
+
   .progress-bar, .progress {
     border-radius: 0;
   }
