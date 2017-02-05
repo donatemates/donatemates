@@ -112,6 +112,13 @@ body {
   max-width: 420px;
 }
 
+@media (max-width: 480px) {
+  .wrapper {
+    margin: 25px auto;
+    max-width: 100%;
+  }
+}
+
 a {
   color: #AE2222;
   text-decoration: underline;
@@ -177,6 +184,17 @@ h1 {
   background: #fff;
   border-radius: 99px;
   color: #AE2222;
+}
+
+@media (max-width: 480px) {
+  .how-it-works {
+    border-radius: 0;
+    margin-top: 25px;
+  }
+
+  .how-it-works li {
+    width: 100%;
+  }
 }
 
 form {
@@ -250,6 +268,21 @@ button:active {
   top: 1px;
 }
 
+@media (max-width: 480px) {
+  form {
+    margin: 25px;
+  }
+
+  .container {
+    width: 100%;
+  }
+
+  .container .half {
+    width: 100%;
+    float: none;
+  }
+}
+
 p {
   margin-top: 20px;
   font-size: 1.5em;
@@ -277,6 +310,7 @@ p {
   font-weight: bold;
   color: black;
   margin-top: 15px;
+  padding: 0 15px;
   line-height: 1.4em;
 }
 
@@ -305,6 +339,12 @@ p {
   padding-right: 15px;
 }
 
+@media (max-width: 480px) {
+  .progress-bar, .progress {
+    border-radius: 0;
+  }
+}
+
 .progress span {
   font-weight: bold;
   color: white;
@@ -320,6 +360,12 @@ ul li:first-child {
   margin-bottom: 20px;
 }
 
+@media (max-width: 480px) {
+  ul li {
+    margin-left: 20px;
+  }
+}
+
 ul li strong {
   color: #232323;
 }
@@ -333,4 +379,10 @@ hr {
   margin: 50px auto 10px;
   color: #A4A4A4;
   font-size: 1.4em;
+}
+
+@media (max-width: 480px) {
+  .footer {
+    margin-top: 25px;
+  }
 }
