@@ -1,0 +1,54 @@
+{
+    "AttributeDefinitions": [
+        {
+            "AttributeName": "campaign_id",
+            "AttributeType": "S"
+        },
+        {
+            "AttributeName": "donation_on",
+            "AttributeType": "S"
+        },
+        {
+            "AttributeName": "donation_cents",
+            "AttributeType": "N"
+        }
+    ],
+    "KeySchema": [
+        {
+            "AttributeName": "campaign_id",
+            "KeyType": "HASH"
+        },
+        {
+            "AttributeName": "donation_on",
+            "KeyType": "RANGE"
+        }
+    ],
+    "GlobalSecondaryIndexes": [
+        {
+            "IndexName": "DonationIndex",
+            "KeySchema": [
+                {
+                    "AttributeName": "campaign_id",
+                    "KeyType": "HASH"
+                },
+                {
+                    "AttributeName": "donation_cents",
+                    "KeyType": "RANGE"
+                }
+            ],
+            "Projection": {
+                "ProjectionType": "INCLUDE",
+                "NonKeyAttributes": ["donator_name", "donation_cents"]
+
+            },
+            "ProvisionedThroughput": {
+                "ReadCapacityUnits": <SECONDARY_READ_CAPACITY>,
+                "WriteCapacityUnits": <SECONDARY_WRITE_CAPACITY>
+            }
+        }
+    ],
+    "ProvisionedThroughput": {
+        "ReadCapacityUnits": <READ_CAPACITY>,
+        "WriteCapacityUnits": <WRITE_CAPACITY>
+    }
+}

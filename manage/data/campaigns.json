@@ -1,0 +1,14 @@
+{
+  "data": [
+    {
+     "charity": "aclu",
+     "name": "John Doeski",
+     "email": "johndoeski@gmail.com",
+     "matchAmount": 5000,
+     "totalAmount": 1353,
+     "campaign": "qjKKg5LipvXY4r7ASik8ES-donation-matcher",
+     "state": "active",
+     "lastUpdate": "2017-02-06T05:28:51.422919+00:00",
+     "createDate": "2017-02-06T05:28:51.422919+00:00"
+    }]
+}

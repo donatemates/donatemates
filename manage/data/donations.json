@@ -1,0 +1,44 @@
+{
+  "data": [
+    {
+      "campaign": "qjKKg5LipvXY4r7ASik8ES-donation-matcher",
+      "donationDate": "2017-02-06T05:30:13.485936+00:00",
+      "name": "Neil DeGrasse Tyson",
+      "emailAddress": "neil@gmail.com",
+      "donation": 200,
+      "emailObject": "https://s3.aws.com/somghasd"
+    },
+    {
+      "campaign": "qjKKg5LipvXY4r7ASik8ES-donation-matcher",
+      "donationDate": "2017-02-06T10:30:13.485936+00:00",
+      "name": "RBG",
+      "emailAddress": "rgb@gmail.com",
+      "donation": 350,
+      "emailObject": "https://s3.aws.com/fghds"
+    },
+    {
+      "campaign": "qjKKg5LipvXY4r7ASik8ES-donation-matcher",
+      "donationDate": "2017-02-06T08:30:13.485936+00:00",
+      "name": "Sophie Cruz",
+      "emailAddress": "sc@gmail.com",
+      "donation": 50,
+      "emailObject": "https://s3.aws.com/sdf"
+    },
+    {
+      "campaign": "qjKKg5LipvXY4r7ASik8ES-donation-matcher",
+      "donationDate": "2017-02-06T02:30:13.485936+00:00",
+      "name": "Barack Obama",
+      "emailAddress": "bo@gmail.com",
+      "donation": 1000,
+      "emailObject": "https://s3.aws.com/fghfg"
+    },
+    {
+      "campaign": "qjKKg5LipvXY4r7ASik8ES-donation-matcher",
+      "donationDate": "2017-02-06T20:30:13.485936+00:00",
+      "name": "Bill Gates",
+      "emailAddress": "bill@gmail.com",
+      "donation": 653,
+      "emailObject": "https://s3.aws.com/fghfghdfs"
+    }
+  ]
+}

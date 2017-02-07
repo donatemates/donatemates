@@ -1,0 +1,10 @@
+zappa
+flask
+flask-restful
+boto3
+moto
+flask_restful_swagger
+arrow
+mock
+nose2
+shortuuid

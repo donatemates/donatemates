@@ -1,0 +1,60 @@
+{
+  "common": {
+    "app_function": "api.api_main.app",
+    "aws_region": "us-east-1",
+    "project_name": "donatemates-api",
+    "http_methods": ["GET", "POST"],
+    "lets_encrypt_key": "account.key",
+    "environment_variables": {
+      "DEBUG_MODE": "true"
+    },
+    "method_header_types": [
+      "Content-Type",
+      "Location",
+      "Status",
+      "X-Frame-Options",
+      "Set-Cookie"
+    ]
+  },
+  "dean": {
+    "extends": "common",
+    "s3_bucket": "api-dean-donatemates",
+    "domain": "api-dean.donatemates.com",
+    "environment_variables": {
+      "STACK_NAME": "dean"
+    },
+    "events": [
+      {
+        "function": "lambda.process_email_handler",
+        "event_source": {
+          "arn":  "arn:aws:s3:::email-dean-donatemates",
+          "events": [
+            "s3:ObjectCreated:*"
+          ]
+        }
+      }
+    ],
+    "frontend_bucket": "aws-website-donatematesdean-0du7t"
+  },
+  "production": {
+    "extends": "common",
+    "s3_bucket": "donatemates-api-production",
+    "domain": "api.donatemates.com",
+    "environment_variables": {
+      "STACK_NAME": "production",
+      "DEBUG_MODE": "false"
+    },
+    "events": [
+      {
+        "function": "lambda.process_email",
+        "event_source": {
+          "arn":  "arn:aws:s3:::email-productino-donatemates",
+          "events": [
+            "s3:ObjectCreated:*"
+          ]
+        }
+      }
+    ]
+  },
+  "frontend_bucket": "aws-website-donatematesproduction-qq161"
+}
