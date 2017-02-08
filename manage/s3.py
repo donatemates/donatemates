@@ -1,6 +1,8 @@
 import boto3
 import glob
 import os
+from tqdm import tqdm
+from mimetypes import guess_type
 
 
 class S3Bucket(object):
@@ -41,9 +43,23 @@ class S3Bucket(object):
         """
         # Delete all items in the bucket
         s3 = boto3.resource('s3')
-        s3.buckets(self.bucket_name).objects.delete()
+        bucket = s3.Bucket(self.bucket_name)
 
-        self.client.delete_bucket(Bucket=self.bucket_name)
+        self.empty()
+        bucket.delete()
+
+    def empty(self):
+        """Method to empty a bucket - don't delete if you want to reuse this bucket later (so you don't lose it)
+
+        Returns:
+            (None)
+        """
+        # Delete all items in the bucket
+        s3 = boto3.resource('s3')
+        bucket = s3.Bucket(self.bucket_name)
+
+        for key in bucket.objects.all():
+            key.delete()
 
     def copy_dir(self, source_dir):
         """Method to copy a local directory to the bucket
@@ -57,6 +73,8 @@ class S3Bucket(object):
         # upload files
         s3 = boto3.resource('s3')
         bucket = s3.Bucket(self.bucket_name)
-        for filename in files:
-            with open(filename, 'rb') as fh:
-                bucket.upload_fileobj(fh, os.path.basename(filename))
+        pbar = tqdm(files)
+        pbar.set_description("Copying Files")
+        for filename in pbar:
+            mime_type = guess_type(filename)
+            bucket.upload_file(filename, os.path.basename(filename), ExtraArgs={'ContentType': mime_type[0]})

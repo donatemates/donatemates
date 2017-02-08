@@ -32,10 +32,10 @@ def get_confirmation(prompt):
 
 
 def main():
-    actions = ["create", "update", "delete", "populate"]
+    actions = ["create", "update", "update_frontend", "delete", "populate"]
     actions_help = create_help("action supports the following:", actions)
 
-    stack = ["dev", "production"]
+    stack = ["dean", "production"]
     stack_help = create_help("stack supports the following:", stack)
 
     parser = argparse.ArgumentParser(description="Deployment Automation for DonateMates",
@@ -53,10 +53,16 @@ def main():
 
     if args.action.lower() == "create":
         # Create a stack
-        mgr.create()
+        if get_confirmation("Are you sure you want to create the Stack '{}'?".format(args.stack_name)):
+            mgr.create()
+        else:
+            print("Create cancelled!")
     elif args.action.lower() == "update":
         # Update a stack
         mgr.update()
+    elif args.action.lower() == "update_frontend":
+        # Update just the frontend
+        mgr.update_frontend()
     elif args.action.lower() == "delete":
         # Delete a stack
         if get_confirmation("Are you sure you want to delete the Stack '{}'?".format(args.stack_name)):

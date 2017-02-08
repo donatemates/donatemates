@@ -4,15 +4,13 @@ from flask_restful_swagger import swagger
 import arrow
 import shortuuid
 from .util import clean_dynamo_response
-
+from .charity import SUPPORTED_CHARITIES
 
 story_post_parser = reqparse.RequestParser()
 story_post_parser.add_argument('charity_name', type=str, required=True, help='Name of charity')
 story_post_parser.add_argument('campaigner_name', type=str, required=True, help='Campaingers name')
 story_post_parser.add_argument('campaigner_email', type=str, required=True, help='Campaingers email')
 story_post_parser.add_argument('match_cents', type=int, required=True, help='Target amount to match')
-
-SUPPORTED_CHARITIES = {"aclu": "the ACLU"}
 
 
 class Campaign(Resource):

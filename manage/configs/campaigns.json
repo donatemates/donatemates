@@ -7,6 +7,14 @@
     "SECONDARY_READ_CAPACITY": 2,
     "SECONDARY_WRITE_CAPACITY": 2
   },
+  "sahil": {
+    "template": "cloudformation/dynamo-campaigns.json",
+    "TABLE_NAME": "campaigns",
+    "READ_CAPACITY": 2,
+    "WRITE_CAPACITY": 2,
+    "SECONDARY_READ_CAPACITY": 2,
+    "SECONDARY_WRITE_CAPACITY": 2
+  },
   "production": {
     "template": "cloudformation/dynamo-campaigns.json",
     "TABLE_NAME": "campaigns",

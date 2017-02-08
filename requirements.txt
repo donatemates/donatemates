@@ -8,3 +8,4 @@ arrow
 mock
 nose2
 shortuuid
+tqdm

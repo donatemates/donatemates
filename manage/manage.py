@@ -8,6 +8,7 @@ import boto3
 import os
 import shlex
 from subprocess import Popen, PIPE
+from .util import get_current_venv
 
 
 def execute_in_virtualenv(virtualenv, commands):
@@ -45,6 +46,32 @@ class StackManager(object):
         self.table_list = ["campaigns.json",
                            "donations.json"]
 
+    def get_zappa_config(self):
+        """Method to get a complete zappa config if a config is extended
+
+        Returns:
+            (str, dict): The package root and complete zappa config
+        """
+        # TODO: should do path lookup or config loading in a less brittle manner
+        root_path = os.path.dirname(__file__).rsplit('/', 1)[0]
+        with open(os.path.join(root_path, "zappa_settings.json"), "rt") as zh:
+            zappa_config_all = json.load(zh)
+
+        if "extends" in zappa_config_all[self.stack_name]:
+            # Merge configs
+            zappa_config = {}
+            extends_config_name = zappa_config_all[self.stack_name]["extends"]
+            for key in zappa_config_all[extends_config_name]:
+                zappa_config[key] = zappa_config_all[extends_config_name][key]
+
+            for key in zappa_config_all[self.stack_name]:
+                zappa_config[key] = zappa_config_all[self.stack_name][key]
+
+        else:
+            zappa_config = zappa_config_all[self.stack_name]
+
+        return root_path, zappa_config
+
     def create(self):
         """Method to create a stack
 
@@ -71,13 +98,13 @@ class StackManager(object):
 
         # Deploy API
         # Make sure stack doesn't already exist - Kind of kludgy right now
-        print("\n ** Deploying Stack {} (This may take 1-2 min)".format(self.stack_name))
+        print("\n ** Deploying API Stack {} (This may take 1-2 min)".format(self.stack_name))
         stack_exists = False
-        stdout, stderr = execute_in_virtualenv(os.environ['VIRTUAL_ENV'], "zappa status {}".format(self.stack_name))
+        stdout, stderr = execute_in_virtualenv(get_current_venv(), "zappa status {}".format(self.stack_name))
         if stderr:
             if "have you deployed yet?" in stderr:
                 # Doesn't exist so deploy.
-                stdout, stderr = execute_in_virtualenv(os.environ['VIRTUAL_ENV'],
+                stdout, stderr = execute_in_virtualenv(get_current_venv(),
                                                        "zappa deploy {}".format(self.stack_name))
                 if stdout:
                     print(stdout)
@@ -93,27 +120,12 @@ class StackManager(object):
         if stack_exists:
             print("Stack '{}' already exists. Can't deploy API.".format(self.stack_name))
 
-        # TODO: should do path lookup or config loading in a less brittle manner
-        root_path = os.path.dirname(__file__).rsplit('/', 1)[0]
-        with open(os.path.join(root_path, "zappa_settings.json"), "rt") as zh:
-            zappa_config_all = json.load(zh)
-
-        if "extends" in zappa_config_all[self.stack_name]:
-            # Merge configs
-            zappa_config = {}
-            extends_config_name = zappa_config_all[self.stack_name]["extends"]
-            for key in zappa_config_all[extends_config_name]:
-                zappa_config[key] = zappa_config_all[extends_config_name][key]
-
-            for key in zappa_config_all[self.stack_name]:
-                zappa_config[key] = zappa_config_all[self.stack_name][key]
-
-        else:
-            zappa_config = zappa_config_all[self.stack_name]
+        # get zappa config
+        root_path, zappa_config = self.get_zappa_config()
 
         if "domain" in zappa_config:
             print("\n ** Setting up domain and SSL certs")
-            stdout, stderr = execute_in_virtualenv(os.environ['VIRTUAL_ENV'],
+            stdout, stderr = execute_in_virtualenv(get_current_venv(),
                                                    "zappa certify {}".format(self.stack_name))
             if stdout:
                 print(stdout)
@@ -144,6 +156,8 @@ class StackManager(object):
         frontend_bucket = S3Bucket(zappa_config["frontend_bucket"])
         frontend_bucket.copy_dir(os.path.join(root_path, 'frontend'))
 
+        print("\n\nCreate Complete!")
+
     def update(self):
         """Method to update a stack
 
@@ -153,10 +167,10 @@ class StackManager(object):
         print("\n ** Updating Table Schema not currently supported...skipping")
 
         # Update API
-        print("\n ** Updating Stack {} (This may take 1 min)".format(self.stack_name))
+        print("\n ** Updating API Stack {} (This may take 1 min)".format(self.stack_name))
 
         # Make sure stack exists - Kind of kludgy right now
-        stdout, stderr = execute_in_virtualenv(os.environ['VIRTUAL_ENV'], "zappa status {}".format(self.stack_name))
+        stdout, stderr = execute_in_virtualenv(get_current_venv(), "zappa status {}".format(self.stack_name))
         if stderr:
             if "have you deployed yet?" in stderr:
                 # Doesn't exist so can't tear down
@@ -166,7 +180,7 @@ class StackManager(object):
                 raise Exception("Unknown response from zappa on check for stack: {}".format(stderr))
         else:
             # Stack exists. Tear it down.
-            stdout, stderr = execute_in_virtualenv(os.environ['VIRTUAL_ENV'],
+            stdout, stderr = execute_in_virtualenv(get_current_venv(),
                                                    "zappa update {}".format(self.stack_name))
             if "Your updated Zappa deployment is live!" in stdout:
                 print(stdout)
@@ -175,6 +189,11 @@ class StackManager(object):
                 print(stdout)
                 print("Error Stream:")
                 print(stderr)
+
+        # Update the frontend
+        self.update_frontend()
+
+        print("\n\nUpdate Complete!")
 
     def update_frontend(self):
         """Method to update just the frontend
@@ -185,8 +204,12 @@ class StackManager(object):
         # Update Frontend
         print("\n ** Updating Frontend {}".format(self.stack_name))
 
+        # get zappa config
+        root_path, zappa_config = self.get_zappa_config()
+
         # Make sure stack exists - Kind of kludgy right now
-        # TODO: Add this
+        frontend_bucket = S3Bucket(zappa_config["frontend_bucket"])
+        frontend_bucket.copy_dir(os.path.join(root_path, 'frontend'))
 
     def delete(self):
         """Method to delete a Stack
@@ -203,20 +226,19 @@ class StackManager(object):
                 temp_table.delete()
 
         # Undeploy API
-        print("\n ** Tearing Down Stack {} (This may take 1-2 min)".format(self.stack_name))
+        print("\n ** Tearing Down API Stack {} (This may take 1-2 min)".format(self.stack_name))
 
         # Make sure stack exists - Kind of kludgy right now
-        stdout, stderr = execute_in_virtualenv(os.environ['VIRTUAL_ENV'], "zappa status {}".format(self.stack_name))
+        stdout, stderr = execute_in_virtualenv(get_current_venv(), "zappa status {}".format(self.stack_name))
         if stderr:
             if "have you deployed yet?" in stderr:
                 # Doesn't exist so can't tear down
                 print("Stack '{}' does not exists. Can't tear down API.".format(self.stack_name))
-                return
             else:
                 raise Exception("Unknown response from zappa on check for stack: {}".format(stderr))
         else:
             # Stack exists. Tear it down.
-            stdout, stderr = execute_in_virtualenv(os.environ['VIRTUAL_ENV'],
+            stdout, stderr = execute_in_virtualenv(get_current_venv(),
                                                    "zappa undeploy -y {}".format(self.stack_name))
             if not stderr:
                 print(stdout)
@@ -224,10 +246,19 @@ class StackManager(object):
                 print("An error occurred during API Tear Down")
                 print(stderr)
 
-        # Remove bucket for emails
+        # Remove bucket contents for static page
+        # get zappa config
+        root_path, zappa_config = self.get_zappa_config()
+        frontend_bucket = S3Bucket(zappa_config["frontend_bucket"])
+        if frontend_bucket.exists():
+            frontend_bucket.empty()
+
+        # Remove bucket contents for emails
         email_bucket = S3Bucket('email-{}-donatemates'.format(self.stack_name))
         if email_bucket.exists():
-            email_bucket.delete()
+            email_bucket.empty()
+
+        print("\n\nDelete Complete!")
 
     def populate(self):
         """Populate the DBs with data to init things.
