@@ -62,8 +62,8 @@ This assumes you are working in a pre-configured AWS account. If you are cloning
 	```
 
 - Finally, we're using LetsEncrypt to provision SSL certs for the API and must generate a key. 
-	- You need to provide a secret key for this process. For official donatemates stacks (including dev) contact [@dkleissa](https://github.com/dkleissa) .
-	- To generate a new key, run the follow command at the repo root. The first time it runs it can take up to 45 minutes, but after that it's ~60 seconds. Your API domain won't be available until this process completes and DNS propagates.
+	- You need to provide a secret key for this process. For official donatemates stacks (including dev) contact [@dkleissa](https://github.com/dkleissa).
+	- To generate a new key, run the following command at the repo root. The first time it runs it can take up to 45 minutes, but after that it's ~60 seconds. Your API domain won't be available until this process completes and DNS propagates.
 
 **DO NOT COMMIT THIS FILE**
 
