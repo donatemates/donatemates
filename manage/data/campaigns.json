@@ -2,13 +2,13 @@
   "data": [
     {
      "charity": "aclu",
-     "name": "John Doeski",
-     "email": "johndoeski@gmail.com",
-     "matchAmount": 5000,
-     "totalAmount": 1353,
-     "campaign": "qjKKg5LipvXY4r7ASik8ES-donation-matcher",
-     "state": "active",
-     "lastUpdate": "2017-02-06T05:28:51.422919+00:00",
-     "createDate": "2017-02-06T05:28:51.422919+00:00"
+     "charity_context_name": "the ACLU",
+     "campaigner_name": "John Doeski",
+     "campaigner_email": "johndoeski@gmail.com",
+     "match_cents": 500000,
+     "campaign_id": "qjKKg5LipvXY4r7ASik8ES-donation-matcher",
+     "campaign_status": "active",
+     "notified_on": "2017-02-06T05:28:51.422919+00:00",
+     "created_on": "2017-02-06T05:28:51.422919+00:00"
     }]
 }
