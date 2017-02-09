@@ -38,8 +38,7 @@
             ],
             "Projection": {
                 "ProjectionType": "INCLUDE",
-                "NonKeyAttributes": ["donator_name", "donation_cents"]
-
+                "NonKeyAttributes": ["donor_name", "donation_cents"]
             },
             "ProvisionedThroughput": {
                 "ReadCapacityUnits": <SECONDARY_READ_CAPACITY>,

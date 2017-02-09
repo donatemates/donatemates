@@ -6,41 +6,45 @@
     <title>Donatemates</title>
     <link rel="stylesheet" href="style.css" />
     <link rel="icon" type="image/png" href="icon.png" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script src="jquery.loadTemplate-0.4.3.js"></script>
   </head>
   <body>
-    <div class="wrapper">
+    <div class="wrapper" id="template-container"></div>
+
+    <script src="script.js"></script>
+    <script type="text/html" id="template">
       <span class="header-label centered">Contribute to</span>
-      <h2 class="campaign-header centered">Sahil Lavingia's $15,000 matching campaign for the ACLU</h2>
+      <h2 class="campaign-header centered"><span data-content="campaignerName"></span>'s <span data-content="matchAmount"></span> matching campaign for <span data-content="charityName"></span></h2>
       <div class="progress-bar">
-        <div class="progress" style="width: 61%"><span>$8,190</span> (61%)</div>
+        <div id="progress" class="progress"><strong data-content="matchedAmount"></strong> (<span data-content="matchedPercentage"></span>)</div>
       </div>
       <div class="container">
         <div class="half">
           <ul>
             <li><strong>Most recent donors:</strong></li>
-            <li>$54 from Samir Lavingia</li>
-            <li>$10 from Shamina Lavingia</li>
-            <li>$9 from Bobby Jindal</li>
-            <li>$999 from Joseph Smith</li>
-            <li>$1 from Robby Kennedy</li>
+            <div id="recent-donors"></div>
           </ul>
         </div>
         <div class="half">
           <ul>
             <li><strong>Top donors:</strong></li>
-            <li>$1,000 from A. D.</li>
-            <li>$999 from Joseph Smith</li>
-            <li>$54 from Samir Lavingia</li>
-            <li>$10 from Shamina Lavingia</li>
-            <li>$9 from Bobby Jindal</li>
+            <div id="large-donors"></div>
           </ul>
         </div>
       </div>
       <hr />
-      <p class="centered">Donate by clicking <a href="#">here</a> and send your receipt email to
-donation-matcher-8a73bfv@donatemates.com</p>
+      <p class="centered">Donate by clicking <a href="#" id="donation-link">here</a> and send your receipt email to
+<span data-content="donationEmail"></span></p>
       <p class="footer centered">powered by</p>
       <a href="#"><h1>donatemates</h1></a>
-    </div>
+    </script>
+    <script>
+      $(document).ready(function() {
+        // Every 10 seconds and on load:
+        setInterval(window.fetchData, 10 * 1000);
+        window.fetchData();
+      });
+    </script>
   </body>
 </html>

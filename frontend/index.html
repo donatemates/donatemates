@@ -6,6 +6,7 @@
     <title>Donatemates</title>
     <link rel="stylesheet" href="style.css" />
     <link rel="icon" type="image/png" href="icon.png" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
   </head>
   <body>
     <div class="wrapper">
@@ -18,31 +19,34 @@
       <form>
         <h2>Create a match campaign:</h2>
         <div class="container">
-          <div class="half">
+          <div class="half relative">
             <label for="amount">I will match up to:</label>
-            <input id="amount" type="text" placeholder="$2,000" />
+            <label for="amount" class="label-prefix">$</label>
+            <input id="amount" type="text" placeholder="2,000" class="with-prefix" />
+            <input id="match_cents" type="hidden" name="match_cents" />
           </div>
           <div class="half">
             <label for="charity">Sent to:</label>
-            <select id="charity">
-              <option selected="selected">ACLU</option>
-              <option>Doctors without Borders</option>
+            <select id="charity" name="charity_id">
+              <option>Loading...</option>
             </select>
           </div>
         </div>
         <div class="container">
           <div class="half">
             <label for="name">My name is:</label>
-            <input id="name" type="text" placeholder="Joseph Smith" />
+            <input id="name" name="campaigner_name" type="text" placeholder="Joseph Smith" />
           </div>
           <div class="half">
             <label for="email">Keep me updated at:</label>
-            <input id="email" type="email" placeholder="Email address" />
+            <input id="email" name="campaigner_email" type="email" placeholder="Email address" />
           </div>
         </div>
-        <button type="submit">Create campaign</button>
+        <button type="submit" class="js-create-campaign-trigger">Create campaign</button>
       </form>
       <p class="centered small">ps. <a href="campaign.html">here's an example</a>.</p>
     </div>
+
+    <script src="script.js"></script>
   </body>
 </html>
