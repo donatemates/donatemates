@@ -100,7 +100,7 @@ The following `actions` are supported:
 - `delete` - tears down the stack. Buckets are emptied but remain along with some DNS and SES configuration to speed up re-deployments
 - `populate` - populates a stack with some dummy data for testing
 
-Each stack is deployed into its own subdomain (expect production). Once deployment is complete:
+Each stack is deployed into its own subdomain (except production). Once deployment is complete:
 
 - API: https://api-{stack_name}.donatemates.com
 - Frontend: https://{stack_name}.donatemates.com
