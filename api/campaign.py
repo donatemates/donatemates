@@ -8,8 +8,8 @@ from .charity import SUPPORTED_CHARITIES
 
 story_post_parser = reqparse.RequestParser()
 story_post_parser.add_argument('charity_name', type=str, required=True, help='Name of charity')
-story_post_parser.add_argument('campaigner_name', type=str, required=True, help='Campaingers name')
-story_post_parser.add_argument('campaigner_email', type=str, required=True, help='Campaingers email')
+story_post_parser.add_argument('campaigner_name', type=str, required=True, help='Campaigner\'s name')
+story_post_parser.add_argument('campaigner_email', type=str, required=True, help='Campaigner\'s email')
 story_post_parser.add_argument('match_cents', type=int, required=True, help='Target amount to match')
 
 
@@ -33,7 +33,7 @@ class Campaign(Resource):
             },
             {
                 "name": "campaigner_name",
-                "description": "Campainger's name",
+                "description": "Campaigner's name",
                 "required": True,
                 "allowMultiple": False,
                 "dataType": 'string',
@@ -41,7 +41,7 @@ class Campaign(Resource):
             },
             {
                 "name": "campaigner_email",
-                "description": "Campainger's email",
+                "description": "Campaigner's email",
                 "required": True,
                 "allowMultiple": False,
                 "dataType": 'string',
