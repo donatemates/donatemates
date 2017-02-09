@@ -47,6 +47,7 @@ This assumes you are working in a pre-configured AWS account. If you are cloning
 	```
 	cd ./donatemates.git
 	pip install -r requirements.txt
+	```
 
 - Setup your system level AWS credentials
 
