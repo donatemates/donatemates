@@ -96,6 +96,9 @@ class StackManager(object):
         else:
             print("Bucket Already Exists...skipping")
 
+        print("\n ** Attaching S3 policy for SES ".format(self.stack_name))
+        email_bucket.attach_ses_policy(self.stack_name)
+
         # Deploy API
         # Make sure stack doesn't already exist - Kind of kludgy right now
         print("\n ** Deploying API Stack {} (This may take 1-2 min)".format(self.stack_name))
@@ -248,12 +251,14 @@ class StackManager(object):
 
         # Remove bucket contents for static page
         # get zappa config
+        print("\n ** Emptying Frontend Bucket".format(self.stack_name))
         root_path, zappa_config = self.get_zappa_config()
         frontend_bucket = S3Bucket(zappa_config["frontend_bucket"])
         if frontend_bucket.exists():
             frontend_bucket.empty()
 
         # Remove bucket contents for emails
+        print("\n ** Emptying Email Bucket".format(self.stack_name))
         email_bucket = S3Bucket('email-{}-donatemates'.format(self.stack_name))
         if email_bucket.exists():
             email_bucket.empty()

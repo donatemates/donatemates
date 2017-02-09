@@ -122,7 +122,9 @@ class CampaignProperties(Resource):
                                   "donation_cents": float(x["donation_cents"])} for x in donors]
 
         # Sum donors
-        # TODO: Add dynamic sum of all donations
+        item["dontation_total_cents"] = self.dontation_table.integer_sum_attribute("campaign_id",
+                                                                                   campaign_id,
+                                                                                   "donation_cents")
 
         item = clean_dynamo_response(item)
 

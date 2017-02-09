@@ -78,3 +78,46 @@ class S3Bucket(object):
         for filename in pbar:
             mime_type = guess_type(filename)
             bucket.upload_file(filename, os.path.basename(filename), ExtraArgs={'ContentType': mime_type[0]})
+
+    def attach_ses_policy(self, stack_name):
+        """Method to attach a policy to a bucket to allow SES to write emails
+
+        Args:
+            policy:
+
+        Returns:
+
+        """
+        # Get the account ID
+        account_id = boto3.client('sts').get_caller_identity()['Account']
+
+        policy_str = """{
+            "Version": "2008-10-17",
+            "Statement": [
+                {
+                    "Sid": "GiveSESPermissionToWriteEmail",
+                    "Effect": "Allow",
+                    "Principal": {
+                        "Service": [
+                            "ses.amazonaws.com"
+                        ]
+                    },
+                    "Action": [
+                        "s3:PutObject"
+                    ],
+                    "Resource": "arn:aws:s3:::$$$$$$/*",
+                    "Condition": {
+                        "StringEquals": {
+                            "aws:Referer": "######"
+                        }
+                    }
+                }
+            ]
+        }""".replace("$$$$$$", self.bucket_name).replace("######", account_id)
+
+        s3 = boto3.resource('s3')
+        bucket_policy = s3.BucketPolicy(self.bucket_name)
+        response = bucket_policy.put(Policy=policy_str)
+
+        if response["ResponseMetadata"]["HTTPStatusCode"] != 204:
+            raise Exception("Failed to attached policy to bucket.")

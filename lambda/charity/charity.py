@@ -16,11 +16,8 @@ class Charity(object):
         self.html = None
 
     @abstractmethod
-    def parse_email(self, raw_email):
+    def parse_email(self):
         """Method to parse an email message
-
-        Args:
-            raw_email(str): The raw email text blob
 
         Returns:
             (dict): Values to save in the DB. At a minimum should be "donor_name", "donor_email", and "donation_cents"
@@ -28,11 +25,8 @@ class Charity(object):
         raise NotImplemented
 
     @abstractmethod
-    def is_receipt(self, email_subject):
+    def is_receipt(self):
         """Method to check if an email is a receipt for this charity by parsing the subject line.
-
-        Args:
-            email_subject(str): The email's subject line
 
         Returns:
             (bool): True if it is the receipt for this charity
@@ -62,5 +56,5 @@ class Charity(object):
         """
         # check if the to email has been parsed and use that
 
-        # If not pre-processed and then pull out campaignid
+        # If not pre-processed and then pull out campaign_id
         return NotImplemented

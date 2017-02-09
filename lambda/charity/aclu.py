@@ -4,18 +4,15 @@ from .charity import Charity
 class Aclu(Charity):
     """Parsing class for the ACLU"""
 
-    def parse_email(self, raw_email):
+    def parse_email(self):
         """Method to parse an email message
-
-        Args:
-            raw_email(str): The raw email text blob
 
         Returns:
             (dict): Values to save in the DB. At a minimum should be "donor_name", "donor_email", and "donation_cents"
         """
         raise NotImplemented
 
-    def is_receipt(self, email_subject):
+    def is_receipt(self):
         """Method to check if an email is a receipt for this charity by parsing the subject line.
 
         Args:

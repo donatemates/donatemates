@@ -11,7 +11,8 @@ class DynamoTable(object):
 
     def __init__(self, table_name):
         self.dynamodb = boto3.resource('dynamodb', region_name="us-east-1")
-        self.table = self.dynamodb.Table('{}.{}.donatemates'.format(DynamoTable.STACK_NAME, table_name))
+        self.table_name = '{}.{}.donatemates'.format(DynamoTable.STACK_NAME, table_name)
+        self.table = self.dynamodb.Table(self.table_name)
 
     def dict_to_item(self, attributes):
         """Method to convert a dictionary to a properly formatted item
@@ -282,3 +283,35 @@ class DynamoTable(object):
                 return []
         else:
             return []
+
+    def integer_sum_attribute(self, hash_key, hash_value, attribute_name, index=None):
+        """Method to query for the largest N records
+
+        Args:
+            hash_key (str): Hash key name
+            hash_value (str): Hash key value
+            attribute_name (str): Name of the attribute to sum
+            index (str): Name of index if not primary
+
+        Returns:
+            (int) Sum of the attribute
+        """
+        client = boto3.client('dynamodb', region_name="us-east-1")
+        paginator = client.get_paginator('query')
+        params = {"KeyConditionExpression": "{} = :queryVal".format(hash_key),
+                  "ExpressionAttributeValues": {":queryVal": {"S": "{}".format(hash_value)}},
+                  "Select": "ALL_ATTRIBUTES",
+                  "TableName": self.table_name,
+                  "PaginationConfig": {'PageSize': 500}
+                  }
+        if index:
+            params["IndexName"] = index
+            params["Select"] = "ALL_PROJECTED_ATTRIBUTES"
+
+        response_iterator = paginator.paginate(**params)
+        total_value = 0
+        for page in response_iterator:
+            for item in page["Items"]:
+                total_value += int(item[attribute_name]["N"])
+
+        return total_value
