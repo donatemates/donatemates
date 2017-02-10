@@ -62,6 +62,27 @@
     ],
     "frontend_bucket": "aws-website-donatematessahil-c9wld"
   },
+  "jordan": {
+    "extends": "common",
+    "s3_bucket": "api-jordan-donatemates",
+    "domain": "api-jordan.donatemates.com",
+    "environment_variables": {
+      "STACK_NAME": "jordan",
+      "DEBUG_MODE": "true"
+    },
+    "events": [
+      {
+        "function": "lambda.process_email_handler",
+        "event_source": {
+          "arn":  "arn:aws:s3:::email-jordan-donatemates",
+          "events": [
+            "s3:ObjectCreated:*"
+          ]
+        }
+      }
+    ],
+    "frontend_bucket": "aws-website-donatematesjordan-zfwst"
+  },
   "production": {
     "extends": "common",
     "s3_bucket": "donatemates-api-production",

@@ -41,6 +41,10 @@ def get_current_venv():
         bin_path = subprocess.check_output(['pyenv', 'which', 'python']).decode('utf-8')
         venv = bin_path[:bin_path.rfind(env_name)] + env_name
     else:  # pragma: no cover
-        print("Zappa requires an active virtual environment.")
-        quit()
+        venv = subprocess.check_output(['which', 'python']).decode('utf-8').split('bin')
+        if len(venv) == 2:
+            venv = venv[0]
+        else:
+            print("Zappa requires an active virtual environment.")
+            quit()
     return venv
