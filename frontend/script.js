@@ -117,6 +117,8 @@ $(document).ready(function() {
       }
 
       $("#donation-link").attr("href", data.donation_url);
+    }).fail(function() {
+      $(".fourohfour-indicator").show();
     });
   };
 });

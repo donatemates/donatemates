@@ -132,6 +132,10 @@ a {
   position: relative;
 }
 
+.hidden {
+  display: none;
+}
+
 .container {
   display: block;
   overflow: hidden;
@@ -412,4 +416,19 @@ hr {
   .footer {
     margin-top: 25px;
   }
+}
+
+.fourohfour-indicator {
+  text-align: center;
+  font-size: 4em;
+  color: #535353;
+  font-weight: bold;
+  font-family: "Avenir Next";
+}
+
+.fourohfour-indicator small {
+  display: block;
+  color: #999;
+  margin-top: 20px;
+  font-size: .5em;
 }
