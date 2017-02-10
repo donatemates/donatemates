@@ -21,5 +21,4 @@ class Aclu(Charity):
         Returns:
             (bool): True if it is the receipt for this charity
         """
-        raise NotImplementedError
-
+        return "Thank you for your gift to the ACLU" in msg['subject']

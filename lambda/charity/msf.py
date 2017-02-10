@@ -1,12 +1,15 @@
 from .charity import Charity
 
 
-class Aclu(Charity):
+class Msf(Charity):
     """Parsing class for the ACLU"""
 
     def parse_email(self, msg):
         """
         Method to parse an email message
+
+        Arguments:
+            msg ({ body: str, subject: str }): The email's subject and body
 
         Returns:
             (dict): Values to save in the DB. At a minimum should be:
@@ -22,10 +25,10 @@ class Aclu(Charity):
         the subject line.
 
         Args:
-            email ({ body: str, subject: str }): The email's subject and body
+            msg ({ body: str, subject: str }): The email's subject and body
 
         Returns:
             (bool): True if it is the receipt for this charity
         """
-        raise NotImplementedError
+        return "Thank you from Doctors Without Borders" in msg['subject']
 
