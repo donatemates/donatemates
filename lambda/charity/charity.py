@@ -2,7 +2,7 @@ from abc import ABCMeta, abstractmethod
 import email
 
 
-class Charity(object):
+class CharityParser(object):
     """Parent Class for Charity Parsers"""
     __metaclass__ = ABCMeta
 
@@ -25,9 +25,9 @@ class Charity(object):
 
         Returns:
             (dict): Values to save in the DB. At a minimum should be:
-            "donor_name"
-            "donor_email"
-            "donation_cents"
+                donor_name
+                donor_email
+                donation_cents
         """
         raise NotImplementedError
 
@@ -44,6 +44,23 @@ class Charity(object):
             (bool): True if it is the receipt for this charity
         """
         raise NotImplementedError
+
+
+    def centify_donation_string(self, donation_string):
+        """
+        Converts a donation into cents.
+
+        Arguments:
+            donation_string (str): A string, like "$200.00"
+
+        Returns:
+            int: Cent amount (USD)
+        """
+        if "$" in donation_string:
+            donation_string = donation_string.strip("$")
+            return int(100 * float(donation_string))
+        else:
+            raise ValueError("Cannot parse non-USD donations yet.")
 
     def preprocess(self):
         """

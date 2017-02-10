@@ -68,8 +68,8 @@ def process_email_handler(event, context):
 
     # Detect Charity
     charity_class = None
-    for c in SUPPORTED_CHARITIES:
-        class_ = getattr(charity, SUPPORTED_CHARITIES[c]["class"])
+    for charity in SUPPORTED_CHARITIES:
+        class_ = getattr(charity, SUPPORTED_CHARITIES[charity]["class"])
         charity_class = class_("email text here")
 
         # Detect charity

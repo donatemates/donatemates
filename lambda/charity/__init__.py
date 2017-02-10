@@ -1,2 +1,2 @@
-from aclu import Aclu
-from msf import Msf
+from aclu import ACLU
+from msf import MSF

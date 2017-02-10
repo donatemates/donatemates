@@ -8,12 +8,12 @@ SUPPORTED_CHARITIES = {
     "aclu": {
         "conversational_name": "the ACLU",
         "website": "https://action.aclu.org/donate-aclu?redirect=donate/join-renew-give",
-        "class": "Aclu"
+        "class": "ACLUParser"
     },
     "msf": {
         "conversational_name": "Doctors Without Borders",
         "website": "https://donate.doctorswithoutborders.org/onetime.cfm",
-        "class": "Msf"
+        "class": "MSFParser"
     }
 }
 

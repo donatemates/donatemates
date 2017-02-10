@@ -1,7 +1,7 @@
 from .charity import Charity
 
 
-class Msf(Charity):
+class MSFParser(Charity):
     """Parsing class for the ACLU"""
 
     def parse_email(self):
@@ -17,7 +17,6 @@ class Msf(Charity):
                 "donor_email"
                 "donation_cents"
         """
-
         raise NotImplementedError
 
     def is_receipt(self):
