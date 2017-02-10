@@ -10,7 +10,7 @@ class Aclu(Charity):
         Returns:
             (dict): Values to save in the DB. At a minimum should be "donor_name", "donor_email", and "donation_cents"
         """
-        raise NotImplemented
+        raise NotImplementedError
 
     def is_receipt(self):
         """Method to check if an email is a receipt for this charity by parsing the subject line.
@@ -21,5 +21,5 @@ class Aclu(Charity):
         Returns:
             (bool): True if it is the receipt for this charity
         """
-        raise NotImplemented
+        raise NotImplementedError
 

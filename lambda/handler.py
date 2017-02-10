@@ -6,7 +6,8 @@ from api.campaign import SUPPORTED_CHARITIES
 
 
 def store_donation(data):
-    """Function to store the parsed donation record
+    """
+    Function to store the parsed donation record
 
     Args:
         data(dict):
@@ -14,11 +15,12 @@ def store_donation(data):
     Returns:
         None
     """
-    raise NotImplemented
+    raise NotImplementedError
 
 
 def send_email(to_address, subject, text_msg, html_msg):
-    """Function to send an email from the default address
+    """
+    Function to send an email from the default address
 
     Args:
         to_address(str): The email address to send to
@@ -30,24 +32,25 @@ def send_email(to_address, subject, text_msg, html_msg):
         None
     """
     client = boto3.client('ses')
-    response = client.send_email(Source="hello@donatemates.com",
-                                 Destination={'ToAddresses': [to_address]},
-                                 Message={
-                                     'Subject': {
-                                         'Data': subject,
-                                         'Charset': 'UTF-8'
-                                     },
-                                     'Body': {
-                                         'Text': {
-                                             'Data': text_msg,
-                                             'Charset': 'UTF-8'
-                                         },
-                                         'Html': {
-                                             'Data': html_msg,
-                                             'Charset': 'UTF-8'
-                                         }
-                                     }
-                                 })
+    response = client.send_email(
+        Source="hello@donatemates.com",
+        Destination={'ToAddresses': [to_address]},
+        Message={
+            'Subject': {
+                'Data': subject,
+                'Charset': 'UTF-8'
+            },
+            'Body': {
+                'Text': {
+                    'Data': text_msg,
+                    'Charset': 'UTF-8'
+                },
+                'Html': {
+                    'Data': html_msg,
+                    'Charset': 'UTF-8'
+                }
+            }
+        })
     print(response)
 
 

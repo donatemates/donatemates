@@ -16,25 +16,34 @@ class Charity(object):
         self.html = None
 
     @abstractmethod
-    def parse_email(self):
-        """Method to parse an email message
+    def parse_email(self, msg):
+        """
+        Method to parse an email message
 
         Returns:
-            (dict): Values to save in the DB. At a minimum should be "donor_name", "donor_email", and "donation_cents"
+            (dict): Values to save in the DB. At a minimum should be:
+            "donor_name"
+            "donor_email"
+            "donation_cents"
         """
-        raise NotImplemented
+        raise NotImplementedError
 
     @abstractmethod
-    def is_receipt(self):
-        """Method to check if an email is a receipt for this charity by parsing the subject line.
+    def is_receipt(self, msg):
+        """
+        Method to check if an email is a receipt for this charity by parsing
+        the email.
 
+        Arguments:
+            email ({ body: str, subject: str})
         Returns:
             (bool): True if it is the receipt for this charity
         """
-        raise NotImplemented
+        raise NotImplementedError
 
     def preprocess(self):
-        """Method to preprocess a raw email message into components
+        """
+        Method to preprocess a raw email message into components
         """
         msg = email.message_from_string(self.raw_email)
         self.subject = msg["subject"]
@@ -49,7 +58,8 @@ class Charity(object):
                 self.html = part
 
     def get_campaign_id(self):
-        """Function to get the campaign ID
+        """
+        Function to get the campaign ID
 
         Returns:
             (str): the campaign ID
@@ -57,4 +67,4 @@ class Charity(object):
         # check if the to email has been parsed and use that
 
         # If not pre-processed and then pull out campaign_id
-        return NotImplemented
+        return NotImplementedError
