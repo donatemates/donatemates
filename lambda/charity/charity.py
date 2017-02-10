@@ -16,9 +16,12 @@ class Charity(object):
         self.html = None
 
     @abstractmethod
-    def parse_email(self, msg):
+    def parse_email(self):
         """
         Method to parse an email message
+
+        Arguments:
+            None
 
         Returns:
             (dict): Values to save in the DB. At a minimum should be:
@@ -29,13 +32,14 @@ class Charity(object):
         raise NotImplementedError
 
     @abstractmethod
-    def is_receipt(self, msg):
+    def is_receipt(self):
         """
         Method to check if an email is a receipt for this charity by parsing
         the email.
 
         Arguments:
-            email ({ body: str, subject: str})
+            None
+
         Returns:
             (bool): True if it is the receipt for this charity
         """

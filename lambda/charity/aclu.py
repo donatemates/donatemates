@@ -7,18 +7,25 @@ class Aclu(Charity):
     def parse_email(self):
         """Method to parse an email message
 
+        Arguments:
+            None
+
         Returns:
-            (dict): Values to save in the DB. At a minimum should be "donor_name", "donor_email", and "donation_cents"
+            (dict): Values to save in the DB. At a minimum should be
+                "donor_name"
+                "donor_email"
+                "donation_cents"
         """
         raise NotImplementedError
 
     def is_receipt(self):
-        """Method to check if an email is a receipt for this charity by parsing the subject line.
+        """
+        Method to check if an email is a receipt for this charity.
 
         Args:
-            email_subject(str): The email's subject line
+            None
 
         Returns:
             (bool): True if it is the receipt for this charity
         """
-        return "Thank you for your gift to the ACLU" in msg['subject']
+        return "Thank you for your gift to the ACLU" in self.subject
