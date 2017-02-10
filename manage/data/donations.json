@@ -1,42 +1,42 @@
 {
   "data": [
     {
-      "campaign_id": "qjKKg5LipvXY4r7ASik8ES-donation-matcher",
+      "campaign_id": "qjKKg5LipvXY4r7ASik8ES",
       "donation_on": "2017-02-06T05:30:13.485936+00:00",
-      "donator_name": "Neil DeGrasse Tyson",
-      "donator_email": "neil@gmail.com",
+      "donor_name": "Neil DeGrasse Tyson",
+      "donor_email": "neil@gmail.com",
       "donation_cents": 20000,
       "email_object": "https://s3.aws.com/somghasd"
     },
     {
-      "campaign_id": "qjKKg5LipvXY4r7ASik8ES-donation-matcher",
+      "campaign_id": "qjKKg5LipvXY4r7ASik8ES",
       "donation_on": "2017-02-06T10:30:13.485936+00:00",
-      "donator_name": "RBG",
-      "donator_email": "rgb@gmail.com",
+      "donor_name": "RBG",
+      "donor_email": "rgb@gmail.com",
       "donation_cents": 35000,
       "email_object": "https://s3.aws.com/fghds"
     },
     {
-      "campaign_id": "qjKKg5LipvXY4r7ASik8ES-donation-matcher",
+      "campaign_id": "qjKKg5LipvXY4r7ASik8ES",
       "donation_on": "2017-02-06T08:30:13.485936+00:00",
-      "donator_name": "Sophie Cruz",
-      "donator_email": "sc@gmail.com",
+      "donor_name": "Sophie Cruz",
+      "donor_email": "sc@gmail.com",
       "donation_cents": 5000,
       "email_object": "https://s3.aws.com/sdf"
     },
     {
-      "campaign_id": "qjKKg5LipvXY4r7ASik8ES-donation-matcher",
+      "campaign_id": "qjKKg5LipvXY4r7ASik8ES",
       "donation_on": "2017-02-06T02:30:13.485936+00:00",
-      "donator_name": "Barack Obama",
-      "donator_email": "bo@gmail.com",
+      "donor_name": "Barack Obama",
+      "donor_email": "bo@gmail.com",
       "donation_cents": 100000,
       "email_object": "https://s3.aws.com/fghfg"
     },
     {
-      "campaign_id": "qjKKg5LipvXY4r7ASik8ES-donation-matcher",
+      "campaign_id": "qjKKg5LipvXY4r7ASik8ES",
       "donation_on": "2017-02-06T20:30:13.485936+00:00",
-      "donator_name": "Bill Gates",
-      "donator_email": "bill@gmail.com",
+      "donor_name": "Bill Gates",
+      "donor_email": "bill@gmail.com",
       "donation_cents": 65300,
       "email_object": "https://s3.aws.com/fghfghdfs"
     }
