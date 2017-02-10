@@ -7,7 +7,7 @@ from .util import clean_dynamo_response
 from .charity import SUPPORTED_CHARITIES
 
 story_post_parser = reqparse.RequestParser()
-story_post_parser.add_argument('charity_name', type=str, required=True, help='Name of charity')
+story_post_parser.add_argument('charity_id', type=str, required=True, help='Name of charity')
 story_post_parser.add_argument('campaigner_name', type=str, required=True, help='Campaigner\'s name')
 story_post_parser.add_argument('campaigner_email', type=str, required=True, help='Campaigner\'s email')
 story_post_parser.add_argument('match_cents', type=int, required=True, help='Target amount to match')
@@ -24,8 +24,8 @@ class Campaign(Resource):
         nickname='Create a Campaign',
         parameters=[
             {
-                "name": "charity_name",
-                "description": "Name of charity. Supported: {}".format(", ".join(SUPPORTED_CHARITIES.keys())),
+                "name": "charity_id",
+                "description": "Identifier of charity. Supported: {}".format(", ".join([c["id"] for c in SUPPORTED_CHARITIES])),
                 "required": True,
                 "allowMultiple": False,
                 "dataType": 'string',
@@ -61,15 +61,15 @@ class Campaign(Resource):
         args = story_post_parser.parse_args()
 
         # Verify charity is supported
-        if args["charity_name"] not in SUPPORTED_CHARITIES.keys():
-            abort(400, description="Unsupported charity type: {}".format(args["charity_name"]))
+        if args["charity_id"] not in [c["id"] for c in SUPPORTED_CHARITIES]:
+            abort(400, description="Unsupported charity: {}".format(args["charity_id"]))
 
-        args["campaign_id"] = "{}-donation-matcher".format(shortuuid.uuid())
+        args["campaign_id"] = shortuuid.uuid()
         args["campaign_status"] = "active"
         args['notified_on'] = arrow.utcnow().isoformat()
         args['created_on'] = arrow.utcnow().isoformat()
         args['secret_id'] = shortuuid.uuid()
-        args['charity_context_name'] = SUPPORTED_CHARITIES[args["charity_name"]]
+        args['charity_id'] = args["charity_id"]
 
         # Put the object
         self.table.put_item(args)
@@ -81,7 +81,7 @@ class CampaignProperties(Resource):
     def __init__(self):
         super(Resource, self).__init__()
         self.campaign_table = DynamoTable('campaigns')
-        self.dontation_table = DynamoTable('donations')
+        self.donation_table = DynamoTable('donations')
 
     @swagger.operation(
         notes='Get the properties of a campaign by ID',
@@ -108,23 +108,31 @@ class CampaignProperties(Resource):
         if not item:
             abort(404, description="Campaign '{}' not found".format(campaign_id))
 
+        item["donation_email"] = "match-{}@donatemates.com".format(item["campaign_id"])
+
         # Get donor amount stats
-        amounts = self.dontation_table.query_biggest("campaign_id", campaign_id, 5, index="DonationIndex")
+        amounts = self.donation_table.query_biggest("campaign_id", campaign_id, 5, index="DonationIndex")
 
         # Get donor time stats
-        donors = self.dontation_table.query_most_recent("campaign_id", campaign_id,
-                                                        "donation_on", arrow.utcnow().isoformat(),
-                                                        limit=5)
+        donors = self.donation_table.query_most_recent("campaign_id", campaign_id,
+                                                       "donation_on", arrow.utcnow().isoformat(),
+                                                       limit=5)
 
-        item["large_donors"] = [{"donator_name": x["donator_name"],
+        item["large_donors"] = [{"donor_name": x["donor_name"],
                                  "donation_cents": float(x["donation_cents"])} for x in amounts]
-        item["recent_donors"] = [{"donator_name": x["donator_name"],
+        item["recent_donors"] = [{"donor_name": x["donor_name"],
                                   "donation_cents": float(x["donation_cents"])} for x in donors]
 
         # Sum donors
-        item["dontation_total_cents"] = self.dontation_table.integer_sum_attribute("campaign_id",
-                                                                                   campaign_id,
-                                                                                   "donation_cents")
+        item["donation_total_cents"] = self.donation_table.integer_sum_attribute("campaign_id",
+                                                                                 campaign_id,
+                                                                                 "donation_cents")
+
+        # Get charity information
+        charity = next(c for (i, c) in enumerate(SUPPORTED_CHARITIES) if c["id"] == item["charity_id"])
+
+        item["donation_url"] = charity["donation_url"]
+        item["charity_name"] = charity["conversational_name"]
 
         item = clean_dynamo_response(item)
 
