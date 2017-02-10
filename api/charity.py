@@ -1,5 +1,7 @@
 from flask_restful import Resource
 from flask_restful_swagger import swagger
+from copy import deepcopy
+
 
 # Setup supported charities here. Parsing email lambda imports this variable!
 SUPPORTED_CHARITIES = {"aclu": {"conversational_name": "the ACLU",
@@ -18,7 +20,7 @@ class Charities(Resource):
     def get(self):
         """Get Supported Charities"""
         # Format the JSON response
-        charities = SUPPORTED_CHARITIES
+        charities = deepcopy(SUPPORTED_CHARITIES)
         for c in charities:
             del charities[c]["class"]
 
