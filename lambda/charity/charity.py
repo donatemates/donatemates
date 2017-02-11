@@ -45,7 +45,6 @@ class CharityParser(object):
         """
         raise NotImplementedError
 
-
     def centify_donation_string(self, donation_string):
         """
         Converts a donation into cents.

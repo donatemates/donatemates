@@ -32,8 +32,4 @@ class Charities(Resource):
         nickname='Get Supported Charities')
     def get(self):
         """Get Supported Charities"""
-        # Format the JSON response
-        charities = deepcopy(SUPPORTED_CHARITIES)
-        for charity in charities:
-            del charities[charity]["class"]
         return SUPPORTED_CHARITIES, 200
