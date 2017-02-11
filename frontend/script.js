@@ -102,18 +102,20 @@ $(document).ready(function() {
         donationEmail: data.donation_email
       });
 
-      $("#progress").style('width', matchedPercentage);
+      $("#progress").css({'min-width': matchedPercentage});
 
-      $("#recent-donors").empty();
-      for (var i = 0; i < data.recent_donors; i++) {
-        var donation = data.recent_donors[i];
-        $("#recent-donors").append($("<li />").text(formatCurrency(donation.donation_cents) + " by " + donation.donor_name));
-      }
+      if (data.donation_total_cents == 0) {
+        $("#donor-container").empty();
+      } else {
+        for (var i = 0; i < data.recent_donors; i++) {
+          var donation = data.recent_donors[i];
+          $("#recent-donors").append($("<li />").text(formatCurrency(donation.donation_cents) + " by " + donation.donor_name));
+        }
 
-      $("#large-donors").empty();
-      for (var i = 0; i < data.large_donors; i++) {
-        var donation = data.large_donors[i];
-        $("#large-donors").append($("<li />").text(formatCurrency(donation.donation_cents) + " by " + donation.donor_name));
+        for (var i = 0; i < data.large_donors; i++) {
+          var donation = data.large_donors[i];
+          $("#large-donors").append($("<li />").text(formatCurrency(donation.donation_cents) + " by " + donation.donor_name));
+        }
       }
 
       $("#donation-link").attr("href", data.donation_url);
