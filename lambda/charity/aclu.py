@@ -1,25 +1,51 @@
 from .charity import Charity
 
 
-class Aclu(Charity):
+class ACLUParser(Charity):
     """Parsing class for the ACLU"""
 
     def parse_email(self):
         """Method to parse an email message
 
+        Arguments:
+            None
+
         Returns:
-            (dict): Values to save in the DB. At a minimum should be "donor_name", "donor_email", and "donation_cents"
+            (dict): Values to save in the DB. At a minimum should be
+                "donor_name"
+                "donor_email"
+                "donation_cents"
         """
-        raise NotImplemented
+        parsed_message = {}
+        plaintext_lines = self.plaintext.split()
+        try:
+            for i in range(len(plaintext_lines)):
+                # We happen to know that the value of each of these items is TWO
+                # lines below it in the plaintext email. This is pretty brittle,
+                # and should probably be done with XML-parsing in the HTML message
+                # in the future.
+                # TODO: Un-brittle this.
+                line = plaintext_lines[i]
+                if "Confirmation Code:" in line:
+                    parsed_message['aclu_confirmation_code'] = plaintext_lines[i + 2]
+                elif "Gift Amount: " in line:
+                    str_amount = plaintext_lines[i + 2]
+                    parsed_message['donation_raw'] = str_amount
+                    parsed_message['donation_cents'] = self.centify_donation_string(str_amount)
+
+            # Ensures that the values are stripped of excess whitespace.
+            return {k: v.strip() for k, v in parsed_message.iteritems()}
+        except:
+            raise ValueError("Not a digestable ACLU email.")
 
     def is_receipt(self):
-        """Method to check if an email is a receipt for this charity by parsing the subject line.
+        """
+        Method to check if an email is a receipt for this charity.
 
         Args:
-            email_subject(str): The email's subject line
+            None
 
         Returns:
             (bool): True if it is the receipt for this charity
         """
-        raise NotImplemented
-
+        return "Thank you for your gift to the ACLU" in self.subject
