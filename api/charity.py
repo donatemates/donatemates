@@ -1,21 +1,21 @@
 from flask_restful import Resource
 from flask_restful_swagger import swagger
-from copy import deepcopy
 
 
 # Setup supported charities here. Parsing email lambda imports this variable!
-SUPPORTED_CHARITIES = {
-    "aclu": {
-        "conversational_name": "the ACLU",
-        "website": "https://action.aclu.org/donate-aclu?redirect=donate/join-renew-give",
-        "class": "ACLUParser"
-    },
-    "msf": {
-        "conversational_name": "Doctors Without Borders",
-        "website": "https://donate.doctorswithoutborders.org/onetime.cfm",
-        "class": "MSFParser"
-    }
-}
+SUPPORTED_CHARITIES = [{
+    "id": "aclu",
+    "name": "ACLU",
+    "conversational_name": "the ACLU",
+    "donation_url": "https://action.aclu.org/donate-aclu?redirect=donate/join-renew-give",
+    "class": "ACLUParser"
+}, {
+    "id": "msf",
+    "name": "Doctors without Borders",
+    "conversational_name": "Doctors Without Borders",
+    "donation_url": "https://donate.doctorswithoutborders.org/onetime.cfm",
+    "class": "MSFParser"
+}]
 
 
 class Charities(Resource):
@@ -36,5 +36,4 @@ class Charities(Resource):
         charities = deepcopy(SUPPORTED_CHARITIES)
         for charity in charities:
             del charities[charity]["class"]
-
         return SUPPORTED_CHARITIES, 200
