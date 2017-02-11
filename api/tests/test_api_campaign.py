@@ -22,7 +22,7 @@ class APICampaignTestMixin(object):
 
     def test_post(self):
         """Method to test post"""
-        data = {"charity_name": "aclu",
+        data = {"charity_id": "aclu",
                 "campaigner_name": "John Doeski",
                 "campaigner_email": "johndoeski@gmail.com",
                 "match_cents": 5000}
@@ -34,7 +34,7 @@ class APICampaignTestMixin(object):
 
     def test_post_bad_charity(self):
         """Method to test post"""
-        data = {"charity_name": "aclusd",
+        data = {"charity_id": "aclusd",
                 "campaigner_name": "John Doeski",
                 "campaigner_email": "johndoeski@gmail.com",
                 "match_cents": 5000}
