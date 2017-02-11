@@ -1,7 +1,8 @@
-from .charity import Charity
+# from bs4 import BeautifulSoup
+from .charity import CharityParser
 
 
-class ACLUParser(Charity):
+class ACLUParser(CharityParser):
     """Parsing class for the ACLU"""
 
     def parse_email(self):
@@ -17,6 +18,8 @@ class ACLUParser(Charity):
                 "donation_cents"
         """
         parsed_message = {}
+        # soup = BeautifulSoup(self.html.as_string())
+
         plaintext_lines = self.plaintext.split()
         try:
             for i in range(len(plaintext_lines)):

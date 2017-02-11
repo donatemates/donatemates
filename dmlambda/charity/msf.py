@@ -1,7 +1,7 @@
-from .charity import Charity
+from .charity import CharityParser
 
 
-class MSFParser(Charity):
+class MSFParser(CharityParser):
     """Parsing class for the ACLU"""
 
     def parse_email(self):
@@ -17,7 +17,21 @@ class MSFParser(Charity):
                 "donor_email"
                 "donation_cents"
         """
-        raise NotImplementedError
+        self.preprocess()
+        # donation_string = [
+        #   td.fetchNextSiblings()[0].text for td in soup.find_all('td')
+        #   if 'Your total donation' in td.text
+        # ][0]
+        donation_string = [word for word in self.plaintext.as_string().split() if "$" in word][0]
+        if "<" in self.from_email:
+            donor_name, donor_email = self.parse_addressbook_email(self.from_email)
+        else:
+            donor_name = donor_email = self.from_email
+        return {
+            "donation_cents": self.centify_donation_string(donation_string),
+            "donor_name": donor_name,
+            "donor_email": donor_email
+        }
 
     def is_receipt(self):
         """

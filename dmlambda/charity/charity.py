@@ -1,6 +1,6 @@
 from abc import ABCMeta, abstractmethod
 import email
-
+import re
 
 class CharityParser(object):
     """Parent Class for Charity Parsers"""
@@ -56,10 +56,29 @@ class CharityParser(object):
             int: Cent amount (USD)
         """
         if "$" in donation_string:
+            donation_string = donation_string.replace(",", "")
             donation_string = donation_string.strip("$")
             return int(100 * float(donation_string))
         else:
             raise ValueError("Cannot parse non-USD donations yet.")
+
+    def parse_addressbook_email(self, email_string):
+        """
+        Parses addressbook-emails of the form "Name <email>"
+
+        Arguments:
+            email_string (str): The string to parse
+
+        Returns:
+            name (str), email (str)
+        """
+        results = re.findall(r"[\"']{0,1}(.*)['\"]{0,1}\s*<(.*\@.*)>", email_string)
+        if len(results) > 0:
+            return results[0]
+        else:
+            raise ValueError(
+                "{} was not a valid address-book string.".format(email_string)
+            )
 
     def preprocess(self):
         """
