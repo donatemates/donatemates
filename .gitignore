@@ -3,3 +3,4 @@
 /account.key
 *.pyc
 /frontend/Archive.zip
+*ignore*

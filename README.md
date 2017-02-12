@@ -8,10 +8,10 @@ This repo contains all the source code for the donatemates serverless platform, 
 `/api` - A python package containing a Flask base REST API application and tests
 
 `/frontend` - The donatemates website
- 
+
 `/manage` - A python package containing classes for depolyment and management of the donatemates platform
 
-`/lambda` - A python package containing email parsing software
+`/dmlambda` - A python package containing email parsing software
 
 `/donatemates.py` - A command line tool to manage deployments
 
@@ -22,7 +22,7 @@ This assumes you are working in a pre-configured AWS account. If you are cloning
 - `mkdir` and `cd` to a directory of your choice
 
 - Clone the repo
-	
+
 	```
 	git clone https://github.com/donatemates/donatemates.git
 	```
@@ -30,20 +30,20 @@ This assumes you are working in a pre-configured AWS account. If you are cloning
 - We use the awesome [zappa](https://github.com/Miserlou/Zappa) package to manage much of the deployment, which requires you run in a virtual environment. Also, **be sure to use Python 2.7**, as Python3 is not yet supported by Lambda.
 
 	- Using [virtualenv](https://virtualenv.pypa.io/en/stable/):
-	
+
 		```
 		virtualenv dm-env
 		. dm-env/bin/activate
 		```
-	
+
 	- Using [virtualenvwrapper](https://virtualenvwrapper.readthedocs.io/en/latest/):
-	
+
 		```
 		mkvirtualenv dm-env
 		```
-	
+
 - Install Python dependencies into the virtual environment
-	
+
 	```
 	cd ./donatemates
 	pip install -r requirements.txt
@@ -51,7 +51,7 @@ This assumes you are working in a pre-configured AWS account. If you are cloning
 
 - Setup your system level AWS credentials
 
-	- Currently the automation software loads the system level AWS credentials (e.g. ~/.aws/credentials). 
+	- Currently the automation software loads the system level AWS credentials (e.g. ~/.aws/credentials).
 
 
 - Set the `STACK_NAME` environment variable
@@ -61,7 +61,7 @@ This assumes you are working in a pre-configured AWS account. If you are cloning
 	export STACK_NAME=<name_of_your_stack>
 	```
 
-- Finally, we're using LetsEncrypt to provision SSL certs for the API and must generate a key. 
+- Finally, we're using LetsEncrypt to provision SSL certs for the API and must generate a key.
 	- You need to provide a secret key for this process. For official donatemates stacks (including dev) contact [@dkleissa](https://github.com/dkleissa).
 	- To generate a new key, run the following command at the repo root. The first time it runs it can take up to 45 minutes, but after that it's ~60 seconds. Your API domain won't be available until this process completes and DNS propagates.
 
@@ -153,5 +153,5 @@ Not everything is 100% automated. This is not a perfect list yet, but you must m
 
 - Setup your intial hosted zone in Route53
 - Setup your domain identity in SES
-- Add rules to SES for writing inbound emails to S3 (do this after the automation tool creates the S3 buckets with the appropriate policies for you). 
+- Add rules to SES for writing inbound emails to S3 (do this after the automation tool creates the S3 buckets with the appropriate policies for you).
 - Initial deployment of the frontend using the AWS static website builder (the automation tool updates this initial configuration) and update the zappa config file.

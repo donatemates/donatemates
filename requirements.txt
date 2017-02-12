@@ -9,3 +9,4 @@ mock
 nose2
 shortuuid
 tqdm
+beautifulsoup4

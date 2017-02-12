@@ -30,7 +30,7 @@
     },
     "events": [
       {
-        "function": "lambda.process_email_handler",
+        "function": "dmlambda.process_email_handler",
         "event_source": {
           "arn":  "arn:aws:s3:::email-dean-donatemates",
           "events": [
@@ -51,7 +51,7 @@
     },
     "events": [
       {
-        "function": "lambda.process_email_handler",
+        "function": "dmlambda.process_email_handler",
         "event_source": {
           "arn":  "arn:aws:s3:::email-sahil-donatemates",
           "events": [
@@ -72,7 +72,7 @@
     },
     "events": [
       {
-        "function": "lambda.process_email_handler",
+        "function": "dmlambda.process_email_handler",
         "event_source": {
           "arn":  "arn:aws:s3:::email-jordan-donatemates",
           "events": [
@@ -93,7 +93,7 @@
     },
     "events": [
       {
-        "function": "lambda.process_email",
+        "function": "dmlambda.process_email",
         "event_source": {
           "arn":  "arn:aws:s3:::email-production-donatemates",
           "events": [
