@@ -17,7 +17,6 @@ class MSFParser(CharityParser):
                 "donor_email"
                 "donation_cents"
         """
-        self.preprocess()
         # donation_string = [
         #   td.fetchNextSiblings()[0].text for td in soup.find_all('td')
         #   if 'Your total donation' in td.text
@@ -29,6 +28,7 @@ class MSFParser(CharityParser):
             donor_name = donor_email = self.from_email
         return {
             "donation_cents": self.centify_donation_string(donation_string),
+            "donation_raw": donation_string,
             "donor_name": donor_name,
             "donor_email": donor_email
         }

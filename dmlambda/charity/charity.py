@@ -14,6 +14,7 @@ class CharityParser(object):
         self.date = None
         self.plaintext = None
         self.html = None
+        self.preprocess()
 
     @abstractmethod
     def parse_email(self):

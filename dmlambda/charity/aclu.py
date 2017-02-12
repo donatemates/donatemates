@@ -20,14 +20,13 @@ class ACLUParser(CharityParser):
         parsed_message = {}
         # soup = BeautifulSoup(self.html.as_string())
 
-        plaintext_lines = self.plaintext.split()
+        plaintext_lines = self.plaintext.as_string().split('\n')
         try:
             for i in range(len(plaintext_lines)):
                 # We happen to know that the value of each of these items is TWO
                 # lines below it in the plaintext email. This is pretty brittle,
                 # and should probably be done with XML-parsing in the HTML message
                 # in the future.
-                # TODO: Un-brittle this.
                 line = plaintext_lines[i]
                 if "Confirmation Code:" in line:
                     parsed_message['aclu_confirmation_code'] = plaintext_lines[i + 2]
@@ -37,9 +36,16 @@ class ACLUParser(CharityParser):
                     parsed_message['donation_cents'] = self.centify_donation_string(str_amount)
 
             # Ensures that the values are stripped of excess whitespace.
-            return {k: v.strip() for k, v in parsed_message.iteritems()}
-        except:
-            raise ValueError("Not a digestable ACLU email.")
+            if "<" in self.from_email:
+                donor_name, donor_email = self.parse_addressbook_email(self.from_email)
+            else:
+                donor_name = donor_email = self.from_email
+
+            parsed_message["donor_name"] = donor_name
+            parsed_message["donor_email"] = donor_email
+            return parsed_message
+        except Exception as e:
+            raise ValueError("Not a digestable ACLU email: {}".format(e))
 
     def is_receipt(self):
         """
