@@ -1,6 +1,7 @@
 from pkg_resources import resource_filename
 from .dynamo import DynamoDB
 from .s3 import S3Bucket
+from .iam import IAM
 from api.aws import DynamoTable
 import json
 import boto3
@@ -96,8 +97,12 @@ class StackManager(object):
         else:
             print("Bucket Already Exists...skipping")
 
-        print("\n ** Attaching S3 policy for SES ".format(self.stack_name))
+        print("\n ** Attaching S3 policy for SES ")
         email_bucket.attach_ses_policy(self.stack_name)
+
+        print("\n ** Creating IAM role")
+        role = IAM(self.stack_name)
+        role.create_role()
 
         # Deploy API
         # Make sure stack doesn't already exist - Kind of kludgy right now
@@ -262,6 +267,11 @@ class StackManager(object):
         email_bucket = S3Bucket('email-{}-donatemates'.format(self.stack_name))
         if email_bucket.exists():
             email_bucket.empty()
+
+        # Delete role
+        print("\n ** Deleting IAM role")
+        role = IAM(self.stack_name)
+        role.delete_role()
 
         print("\n\nDelete Complete!")
 

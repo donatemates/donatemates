@@ -2,6 +2,7 @@ from abc import ABCMeta, abstractmethod
 import email
 import re
 
+
 class CharityParser(object):
     """Parent Class for Charity Parsers"""
     __metaclass__ = ABCMeta
