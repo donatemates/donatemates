@@ -46,5 +46,5 @@ class PPParser(CharityParser):
         Returns:
             (bool): True if it is the receipt for this charity
         """
-        return "Thank you from Doctors Without Borders" in self.subject
+        return '@ppfa.org' in self.plaintext.as_string()
 
