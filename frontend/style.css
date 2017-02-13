@@ -386,8 +386,9 @@ ul li {
   margin-top: 15px;
 }
 
-ul li:first-child {
-  margin-top: 25px;
+ul li strong {
+  display: block;
+  margin-top: 20px;
   margin-bottom: 20px;
 }
 

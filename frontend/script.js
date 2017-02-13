@@ -107,12 +107,12 @@ $(document).ready(function() {
       if (data.donation_total_cents == 0) {
         $("#donor-container").empty();
       } else {
-        for (var i = 0; i < data.recent_donors; i++) {
+        for (var i = 0; i < data.recent_donors.length; i++) {
           var donation = data.recent_donors[i];
           $("#recent-donors").append($("<li />").text(formatCurrency(donation.donation_cents) + " by " + donation.donor_name));
         }
 
-        for (var i = 0; i < data.large_donors; i++) {
+        for (var i = 0; i < data.large_donors.length; i++) {
           var donation = data.large_donors[i];
           $("#large-donors").append($("<li />").text(formatCurrency(donation.donation_cents) + " by " + donation.donor_name));
         }
