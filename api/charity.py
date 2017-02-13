@@ -15,6 +15,12 @@ SUPPORTED_CHARITIES = [{
     "conversational_name": "Doctors Without Borders",
     "donation_url": "https://donate.doctorswithoutborders.org/onetime.cfm",
     "class": "MSFParser"
+}, {
+    "id": "pp",
+    "name": "Planned Parenthood",
+    "conversational_name": "Planned Parenthood",
+    "donation_url": "https://secure.ppaction.org/site/Donation2?df_id=12913&12913.donation=form1",
+    "class": "PPParser"
 }]
 
 
