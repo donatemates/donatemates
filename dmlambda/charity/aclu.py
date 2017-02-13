@@ -41,8 +41,8 @@ class ACLUParser(CharityParser):
             else:
                 donor_name = donor_email = self.from_email
 
-            parsed_message["donor_name"] = donor_name
-            parsed_message["donor_email"] = donor_email
+            parsed_message["donor_name"] = donor_name.strip()
+            parsed_message["donor_email"] = donor_email.strip()
             return parsed_message
         except Exception as e:
             raise ValueError("Not a digestable ACLU email: {}".format(e))

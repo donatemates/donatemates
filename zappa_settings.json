@@ -5,6 +5,7 @@
     "project_name": "donatemates-api",
     "http_methods": ["GET", "POST"],
     "lets_encrypt_key": "account.key",
+    "manage_roles": false,
     "environment_variables": {
       "DEBUG_MODE": "true"
     },
@@ -24,6 +25,7 @@
     "extends": "common",
     "s3_bucket": "api-dean-donatemates",
     "domain": "api-dean.donatemates.com",
+    "role_name": "dean-lambda-execution-role",
     "environment_variables": {
       "STACK_NAME": "dean",
       "DEBUG_MODE": "true"
@@ -45,6 +47,7 @@
     "extends": "common",
     "s3_bucket": "api-sahil-donatemates",
     "domain": "api-sahil.donatemates.com",
+    "role_name": "sahil-lambda-execution-role",
     "environment_variables": {
       "STACK_NAME": "sahil",
       "DEBUG_MODE": "true"
@@ -66,6 +69,7 @@
     "extends": "common",
     "s3_bucket": "api-jordan-donatemates",
     "domain": "api-jordan.donatemates.com",
+    "role_name": "jordan-lambda-execution-role",
     "environment_variables": {
       "STACK_NAME": "jordan",
       "DEBUG_MODE": "true"

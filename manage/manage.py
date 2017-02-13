@@ -1,6 +1,7 @@
 from pkg_resources import resource_filename
 from .dynamo import DynamoDB
 from .s3 import S3Bucket
+from .iam import IAM
 from api.aws import DynamoTable
 import json
 import boto3
@@ -96,8 +97,12 @@ class StackManager(object):
         else:
             print("Bucket Already Exists...skipping")
 
-        print("\n ** Attaching S3 policy for SES ".format(self.stack_name))
+        print("\n ** Attaching S3 policy for SES ")
         email_bucket.attach_ses_policy(self.stack_name)
+
+        print("\n ** Creating IAM role")
+        role = IAM(self.stack_name)
+        role.create_role()
 
         # Deploy API
         # Make sure stack doesn't already exist - Kind of kludgy right now
@@ -156,8 +161,7 @@ class StackManager(object):
 
         # Copy frontend to bucket
         print("\n ** Updating Frontend ".format(self.stack_name))
-        frontend_bucket = S3Bucket(zappa_config["frontend_bucket"])
-        frontend_bucket.copy_dir(os.path.join(root_path, 'frontend'))
+        self.update_frontend()
 
         print("\n\nCreate Complete!")
 
@@ -210,7 +214,11 @@ class StackManager(object):
         # get zappa config
         root_path, zappa_config = self.get_zappa_config()
 
-        # Make sure stack exists - Kind of kludgy right now
+        # Write endpoint.js
+        with open(os.path.join(root_path, 'frontend', 'endpoint.js'), 'wt') as endpoint_file:
+            endpoint_file.write('var rootUrl = "https://api-dean.donatemates.com/";'.format(zappa_config["domain"]))
+
+        # Update pre-launched bucket
         frontend_bucket = S3Bucket(zappa_config["frontend_bucket"])
         frontend_bucket.copy_dir(os.path.join(root_path, 'frontend'))
 
@@ -262,6 +270,11 @@ class StackManager(object):
         email_bucket = S3Bucket('email-{}-donatemates'.format(self.stack_name))
         if email_bucket.exists():
             email_bucket.empty()
+
+        # Delete role
+        print("\n ** Deleting IAM role")
+        role = IAM(self.stack_name)
+        role.delete_role()
 
         print("\n\nDelete Complete!")
 

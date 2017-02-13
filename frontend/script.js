@@ -1,6 +1,4 @@
 $(document).ready(function() {
-  var rootUrl = "https://api-sahil.donatemates.com/";
-
   // Fetch list of charities:
 
   var $charitySelector = $("#charity");
