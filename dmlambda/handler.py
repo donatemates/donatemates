@@ -37,15 +37,27 @@ def store_donation(data):
         raise Exception("Error writing item to table: {}".format(response['ResponseMetadata']))
 
 
-def get_campaigner_email(campaign_id):
+def get_campaign(campaign_id):
     """
-    Function to get the campaigner's email from the campaign ID
+    Function to get the campaign object from the campaign ID
 
     Args:
         campaign_id(str): The campaign ID
 
     Returns:
-        (str)
+        data(dict): Dictionary of campaign record:
+
+            {
+              "charity_id": "aclu",
+              "campaigner_name": "John Doeski",
+              "campaigner_email": "johndoeski@gmail.com",
+              "match_cents": 500000,
+              "campaign_id": "qjKKg5LipvXY4r7ASik8ES",
+              "campaign_status": "active",
+              "notified_on": "2017-02-06T05:28:51.422919+00:00",
+              "created_on": "2017-02-06T05:28:51.422919+00:00"
+            }
+
     """
     dynamodb = boto3.resource('dynamodb', region_name="us-east-1")
     table = dynamodb.Table('{}.campaigns.donatemates'.format(os.environ.get('STACK_NAME')))
@@ -57,21 +69,16 @@ def get_campaigner_email(campaign_id):
     if response['ResponseMetadata']['HTTPStatusCode'] != 200:
         raise IOError("Error getting item: {}".format(response['ResponseMetadata']))
 
-    if "Item" in response:
-        return response["Item"]["campaigner_email"]
-    else:
-        return None
+    return response["Item"]
 
-
-def send_email(to_address, subject, text_msg, html_msg):
+def send_email(to_address, subject, body):
     """
     Function to send an email from the default address
 
     Args:
         to_address(str): The email address to send to
         subject(str): The email message subject
-        text_msg(str): The plain text email
-        html_msg(str): The HTML formatted message
+        body(str): The email message body
 
     Returns:
         None
@@ -87,11 +94,11 @@ def send_email(to_address, subject, text_msg, html_msg):
             },
             'Body': {
                 'Text': {
-                    'Data': text_msg,
+                    'Data': body,
                     'Charset': 'UTF-8'
                 },
                 'Html': {
-                    'Data': html_msg,
+                    'Data': body,
                     'Charset': 'UTF-8'
                 }
             }
@@ -143,16 +150,21 @@ def process_email_handler(event, context):
 
             # Send confirmation to donator
             send_email(charity_class.from_email, "Donatemates Confirmation",
-                       "This confirms your donation of {}. Thanks!".format(data["donation_cents"] / 100),
-                       "This confirms your donation of {}. Thanks!".format(data["donation_cents"] / 100))
+                       "Thank you for your donation of {}. We've added it to the match campaign and have let the matcher know as well. Thank you!".format(data["donation_cents"] / 100))
 
             # Send notification to campaigner
-            campaigner_email = get_campaigner_email(campaign_id)
+            campaign = get_campaign(campaign_id)
+            campaigner_email = campaign["campaigner_email"]
+
+            # donation_total_cents = self.donation_table.integer_sum_attribute("campaign_id",
+            #                                                                  campaign_id,
+            #                                                                  "donation_cents")
+
+
             print("CAMPAIGNER EMAIL: {}".format(campaigner_email))
             if campaigner_email:
                 send_email(campaigner_email, "Donatemates: Campaign Update",
-                           "This confirms your donation of ${}. Thanks!".format(data["donation_cents"] / 100),
-                           "Someone just donated ${} to your campaign!".format(data["donation_cents"] / 100))
+                           "Good news! {} just donated ${} to your campaign! You're at ${} out of the total ${} you've offered to match.".format(donor_name, data["donation_cents"] / 100, donation_total_cents / 100, campaign["match_cents"] / 100))
             else:
                 print("**** Failed to get the campaigner's email ****")
 
