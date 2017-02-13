@@ -89,7 +89,7 @@ $(document).ready(function() {
 
   window.fetchData = function() {
     $.get(rootUrl + "campaign/" + QueryString.id, function(data) {
-      var matchedPercentage = data.donation_total_cents / data.match_cents + "%";
+      var matchedPercentage = Math.round(data.donation_total_cents / data.match_cents * 100) + "%";
 
       $("#template-container").loadTemplate("#template", {
         campaignerName: data.campaigner_name,
