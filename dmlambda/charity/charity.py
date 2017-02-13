@@ -106,6 +106,7 @@ class CharityParser(object):
             (str): the campaign ID
         """
         # check if the to email has been parsed and use that
+        if not self.to_email:
+            self.preprocess()
 
-        # If not pre-processed and then pull out campaign_id
-        return NotImplementedError
+        return self.to_email.split("-")[1].split("@")[0]
