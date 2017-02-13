@@ -29,12 +29,18 @@ $(document).ready(function() {
     ev.preventDefault();
 
     var invalidFields = false;
+
     $form.find("input").map(function() {
-      if(!$(this).val()) {
-        $(this).addClass('error');
+      var $input = $(this);
+
+      if (!$input.val() ||
+          ($input.attr('type') == 'email' && !/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test($input.val())) ||
+          ($input.hasClass('number') && isNaN($input.val().replace(/\,/g,'')))) {
+        $input.addClass('error');
         invalidFields = true;
       }
     });
+
     if (invalidFields) {
       return false;
     }
