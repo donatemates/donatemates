@@ -6,6 +6,7 @@ import arrow
 import charity
 
 from api.campaign import SUPPORTED_CHARITIES
+from api.aws import DynamoTable
 
 
 def store_donation(data):
@@ -70,6 +71,7 @@ def get_campaign(campaign_id):
         raise IOError("Error getting item: {}".format(response['ResponseMetadata']))
 
     return response["Item"]
+
 
 def send_email(to_address, subject, body):
     """
@@ -150,21 +152,19 @@ def process_email_handler(event, context):
 
             # Send confirmation to donator
             send_email(charity_class.from_email, "Donatemates Confirmation",
-                       "Thank you for your donation of {}. We've added it to the match campaign and have let the matcher know as well. Thank you!".format(data["donation_cents"] / 100))
+                       "Thank you for your donation of ${}. We've added it to the match campaign and have let the matcher know as well. Thank you!".format(data["donation_cents"] / 100))
 
             # Send notification to campaigner
             campaign = get_campaign(campaign_id)
             campaigner_email = campaign["campaigner_email"]
 
-            # donation_total_cents = self.donation_table.integer_sum_attribute("campaign_id",
-            #                                                                  campaign_id,
-            #                                                                  "donation_cents")
-
+            donation_table = DynamoTable('donations')
+            donation_total_cents = donation_table.integer_sum_attribute("campaign_id", campaign_id, "donation_cents")
 
             print("CAMPAIGNER EMAIL: {}".format(campaigner_email))
             if campaigner_email:
                 send_email(campaigner_email, "Donatemates: Campaign Update",
-                           "Good news! {} just donated ${} to your campaign! You're at ${} out of the total ${} you've offered to match.".format(donor_name, data["donation_cents"] / 100, donation_total_cents / 100, campaign["match_cents"] / 100))
+                           "Good news! {} just donated ${} to your campaign! You're at ${} out of the total ${} you've offered to match.".format(data["donor_name"], data["donation_cents"] / 100, donation_total_cents / 100, campaign["match_cents"] / 100))
             else:
                 print("**** Failed to get the campaigner's email ****")
 
