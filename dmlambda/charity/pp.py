@@ -32,7 +32,8 @@ class PPParser(CharityParser):
             "donation_raw": donation_string,
             "donor_name": donor_name,
             "donor_email": donor_email,
-            "pp_transaction_id": transaction_id
+            "receipt_id": transaction_id,
+            "parser": "PPParser"
         }
 
     def is_receipt(self):
