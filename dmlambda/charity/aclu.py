@@ -32,7 +32,7 @@ class ACLUParser(CharityParser):
                     parsed_message['receipt_id'] = plaintext_lines[i + 2]
                 elif "Gift Amount: " in line:
                     str_amount = plaintext_lines[i + 2]
-                    parsed_message['donation_raw'] = str_amount
+                    parsed_message['donation_raw'] = str_amount.strip()
                     parsed_message['donation_cents'] = self.centify_donation_string(str_amount)
 
             # Ensures that the values are stripped of excess whitespace.

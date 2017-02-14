@@ -315,3 +315,4 @@ class DynamoTable(object):
                 total_value += int(item[attribute_name]["N"])
 
         return total_value
+
