@@ -29,7 +29,7 @@ class ACLUParser(CharityParser):
                 # in the future.
                 line = plaintext_lines[i]
                 if "Confirmation Code:" in line:
-                    parsed_message['aclu_confirmation_code'] = plaintext_lines[i + 2]
+                    parsed_message['receipt_id'] = plaintext_lines[i + 2]
                 elif "Gift Amount: " in line:
                     str_amount = plaintext_lines[i + 2]
                     parsed_message['donation_raw'] = str_amount
@@ -43,6 +43,7 @@ class ACLUParser(CharityParser):
 
             parsed_message["donor_name"] = donor_name.strip()
             parsed_message["donor_email"] = donor_email.strip()
+            parsed_message['parser'] = "ACLUParser"
             return parsed_message
         except Exception as e:
             raise ValueError("Not a digestable ACLU email: {}".format(e))
