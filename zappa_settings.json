@@ -114,7 +114,6 @@
       "Status",
       "X-Frame-Options",
       "Set-Cookie"
-    ],
-    "cors": false
+    ]
   }
 }
