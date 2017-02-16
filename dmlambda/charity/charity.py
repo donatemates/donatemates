@@ -109,4 +109,8 @@ class CharityParser(object):
         if not self.to_email:
             self.preprocess()
 
-        return self.to_email.split("-")[1].split("@")[0]
+        # TODO: investigate why " were appearing in email address
+        email_addr = self.to_email.split("@")[0]
+        if email_addr[0] == '"':
+            email_addr = email_addr[1:]
+        return email_addr

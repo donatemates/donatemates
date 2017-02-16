@@ -16,6 +16,8 @@ import json
 from pkg_resources import resource_filename
 
 from moto import mock_dynamodb2
+from moto import mock_ses
+import boto3
 import os
 import arrow
 
@@ -30,6 +32,7 @@ class SetupTests(object):
     def __init__(self):
         self.mock = True
         self.mock_dynamodb = None
+        self.mock_ses = None
         self.table_list = ["campaigns.json",
                            "donations.json"]
         self.config_dir = resource_filename("manage", "configs")
@@ -42,10 +45,13 @@ class SetupTests(object):
         self.mock = True
         self.mock_dynamodb = mock_dynamodb2()
         self.mock_dynamodb.start()
+        self.mock_ses = mock_ses()
+        self.mock_ses.start()
 
     def stop_mocking(self):
         """Method to stop mocking"""
         self.mock_dynamodb.stop()
+        self.mock_ses.stop()
 
     def _create_tables(self):
         """Method to create the S3 index table"""
@@ -83,6 +89,21 @@ class SetupTests(object):
         else:
             self._delete_tables()
 
+    def _setup_ses(self):
+        """Method to verify an email so SES mocking works"""
+        print("\n ** Setting up SES mocking")
+        ses = boto3.client('ses', region_name="us-east-1")
+        # TODO: DMK Mock properly once moto is fixed
+        #response = ses.verify_email_address(EmailAddress='hello@donatemates.com')
+
+    def setup_ses(self):
+        """Method to create the tables"""
+        if self.mock:
+            mock_ses(self._setup_ses())
+        else:
+            # For now just always mock SES during testing.
+            mock_ses(self._setup_ses())
+
 
 class AWSSetupLayer(object):
     """A nose2 layer for setting up temporary AWS resources for testing ONCE per run when doing integration tests"""
@@ -100,6 +121,8 @@ class AWSSetupLayer(object):
         except Exception as err:
             print("An error occurred while creating integration test tables. Deleting Tables. Try again. {}".format(err))
             cls.setup_helper.delete_tables()
+
+        cls.setup_helper.setup_ses()
 
     @classmethod
     def tearDown(cls):

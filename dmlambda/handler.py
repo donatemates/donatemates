@@ -138,23 +138,25 @@ def process_email_handler(event, context):
         if charity_class.is_receipt():
             # Found the charity, parse
             data = charity_class.parse_email()
+            data["receipt_id"] = data["receipt_id"].strip()
 
             # Validate this is a new donation
             donation_table = DynamoTable('donations')
             existing_receipts = donation_table.query_hash("receipt_id", data["receipt_id"],
                                                           index="ReceiptIndex", limit=10)
-
-            if existing_receipts:
-                # This receipt already exists!
-                print("**** Duplicate receipt detected - Bucket: {} - Key: {} ****".format(bucket, key))
-                # Notify user we didn't process it
-                send_email(charity_class.from_email, "Donatemates: Unable to process donation",
-                           "Sorry, we weren't able to process your donation as you've already submitted it to Donatemates for a match campaign. If you think this was an error, please forward this email to help@donatemates.com and we'll look into it. Thanks!")
-                return True
-
             # Get campaign ID
             campaign_id = charity_class.get_campaign_id()
             print("CAMPAIGN ID: {}".format(campaign_id))
+
+            if existing_receipts:
+                # This receipt already exists!
+                print("**** Duplicate receipt detected - Campaign: {} - Receipt: {} - Bucket: {} - Key: {} ****".format(campaign_id, data["receipt_id"], bucket, key))
+                # Notify user we didn't process it
+                email_msg = "Sorry, we weren't able to process your donation as it looks like you've already submitted it to Donatemates for a match campaign."
+                email_msg = "{} If you think this was an error, please forward this email to help@donatemates.com and we'll look into it. Thanks!".format(email_msg)
+                email_msg = "{} \r\n \r\nrequest_id: {}/{}/{}".format(email_msg, campaign_id, data["receipt_id"], key)
+                send_email(charity_class.from_email, "Donatemates: Unable to process donation", email_msg)
+                return True
 
             # Add donation record
             data["campaign_id"] = campaign_id
