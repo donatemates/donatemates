@@ -4,6 +4,7 @@ import botocore
 import os
 import arrow
 import charity
+import shortuuid
 
 from api.campaign import SUPPORTED_CHARITIES
 from api.aws import DynamoTable
@@ -29,6 +30,7 @@ def store_donation(data):
     Returns:
         None
     """
+    # TODO: DMK cleanup to use DynamoTable class since importing now
     dynamodb = boto3.resource('dynamodb', region_name="us-east-1")
     table = dynamodb.Table('{}.donations.donatemates'.format(os.environ.get('STACK_NAME')))
     response = table.put_item(Item=data, ReturnValues='NONE',
@@ -60,6 +62,7 @@ def get_campaign(campaign_id):
             }
 
     """
+    # TODO: DMK cleanup to use DynamoTable class since importing now
     dynamodb = boto3.resource('dynamodb', region_name="us-east-1")
     table = dynamodb.Table('{}.campaigns.donatemates'.format(os.environ.get('STACK_NAME')))
     try:
@@ -118,7 +121,7 @@ def process_email_handler(event, context):
                 key = event["Records"][0]["s3"]["object"]["key"]
                 bucket = event["Records"][0]["s3"]["bucket"]["name"]
     else:
-        print("Not an email")
+        print("Not an email. Move along...")
         return
 
     # Load message from S3
@@ -136,10 +139,22 @@ def process_email_handler(event, context):
             # Found the charity, parse
             data = charity_class.parse_email()
 
+            # Validate this is a new donation
+            donation_table = DynamoTable('donations')
+            existing_receipts = donation_table.query_hash("receipt_id", data["receipt_id"],
+                                                          index="ReceiptIndex", limit=10)
+
+            if existing_receipts:
+                # This receipt already exists!
+                print("**** Duplicate receipt detected - Bucket: {} - Key: {} ****".format(bucket, key))
+                # Notify user we didn't process it
+                send_email(charity_class.from_email, "Donatemates: Unable to process donation",
+                           "Sorry, we weren't able to process your donation as you've already submitted it to Donatemates for a match campaign. If you think this was an error, please forward this email to help@donatemates.com and we'll look into it. Thanks!")
+                return True
+
             # Get campaign ID
             campaign_id = charity_class.get_campaign_id()
-            print("CAMPAIGN ID:")
-            print(campaign_id)
+            print("CAMPAIGN ID: {}".format(campaign_id))
 
             # Add donation record
             data["campaign_id"] = campaign_id
@@ -158,7 +173,7 @@ def process_email_handler(event, context):
             campaign = get_campaign(campaign_id)
             campaigner_email = campaign["campaigner_email"]
 
-            donation_table = DynamoTable('donations')
+            # Get updated total donation
             donation_total_cents = donation_table.integer_sum_attribute("campaign_id", campaign_id, "donation_cents")
 
             print("CAMPAIGNER EMAIL: {}".format(campaigner_email))
@@ -172,6 +187,10 @@ def process_email_handler(event, context):
             return True
 
     # If you get here, you didn't successfully parse the email or it was unsupported
+    # Save email to error bucket
+    s3.Object('parse-fail-donatemates', '{}'.format(shortuuid.uuid())).copy_from(CopySource='{}/{}'.format(bucket, key))
+
+    # Reply to user
     print("**** Failed to detect a supported charity ****")
 
 

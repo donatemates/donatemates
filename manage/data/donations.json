@@ -6,7 +6,9 @@
       "donor_name": "Neil DeGrasse Tyson",
       "donor_email": "neil@gmail.com",
       "donation_cents": 20000,
-      "email_object": "https://s3.aws.com/somghasd"
+      "email_bucket": "your_bucket",
+      "email_key": "dfgadfsads",
+      "receipt_id": "ajdfdfgshjkl"
     },
     {
       "campaign_id": "qjKKg5LipvXY4r7ASik8ES",
@@ -14,7 +16,9 @@
       "donor_name": "RBG",
       "donor_email": "rgb@gmail.com",
       "donation_cents": 35000,
-      "email_object": "https://s3.aws.com/fghds"
+      "email_bucket": "your_bucket",
+      "email_key": "adsf3423nh",
+      "receipt_id": "ghjdgh45"
     },
     {
       "campaign_id": "qjKKg5LipvXY4r7ASik8ES",
@@ -22,7 +26,9 @@
       "donor_name": "Sophie Cruz",
       "donor_email": "sc@gmail.com",
       "donation_cents": 5000,
-      "email_object": "https://s3.aws.com/sdf"
+      "email_bucket": "your_bucket",
+      "email_key": "erg34f",
+      "receipt_id": "hmjkuyhrt"
     },
     {
       "campaign_id": "qjKKg5LipvXY4r7ASik8ES",
@@ -30,7 +36,9 @@
       "donor_name": "Barack Obama",
       "donor_email": "bo@gmail.com",
       "donation_cents": 100000,
-      "email_object": "https://s3.aws.com/fghfg"
+      "email_bucket": "your_bucket",
+      "email_key": "resv4",
+      "receipt_id": "erw54"
     },
     {
       "campaign_id": "qjKKg5LipvXY4r7ASik8ES",
@@ -38,7 +46,9 @@
       "donor_name": "Bill Gates",
       "donor_email": "bill@gmail.com",
       "donation_cents": 65300,
-      "email_object": "https://s3.aws.com/fghfghdfs"
+      "email_bucket": "your_bucket",
+      "email_key": "ghs33",
+      "receipt_id": "ghdfsas"
     }
   ]
 }

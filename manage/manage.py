@@ -32,6 +32,9 @@ def populate_table(table, data_file, print_msg):
     """
     with open(os.path.join(resource_filename("manage", "data"), data_file), 'rt') as df:
         data = json.load(df)
+        if len(data["data"]) == 1:
+            # Assume this is a campaign file for now.
+            print(" - Example campaign loaded: https://<your_stack>/campaign.html?id={}".format(data["data"][0]["campaign_id"]))
         for item in data["data"]:
             table.put_item(item)
             print(print_msg)

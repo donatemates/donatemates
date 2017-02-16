@@ -1,13 +1,15 @@
 {
   "data": [
     {
-     "charity_id": "aclu",
-     "campaigner_name": "John Doeski",
-     "campaigner_email": "johndoeski@gmail.com",
-     "match_cents": 500000,
-     "campaign_id": "qjKKg5LipvXY4r7ASik8ES",
-     "campaign_status": "active",
-     "notified_on": "2017-02-06T05:28:51.422919+00:00",
-     "created_on": "2017-02-06T05:28:51.422919+00:00"
-    }]
+      "campaign_id": "qjKKg5LipvXY4r7ASik8ES",
+      "campaign_status": "active",
+      "campaigner_name": "John Doeski",
+      "campaigner_email": "johndoeski@gmail.com",
+      "charity_id": "aclu",
+      "created_on": "2017-02-15T04:09:57.748644+00:00",
+      "match_cents": 400000,
+      "notified_on": "2017-02-15T04:09:57.748622+00:00",
+      "secret_id": "vgNLMdAHJZybkbMJQmBQ85"
+    }
+  ]
 }

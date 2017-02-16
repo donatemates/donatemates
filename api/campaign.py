@@ -5,6 +5,7 @@ import arrow
 import shortuuid
 from .util import clean_dynamo_response
 from .charity import SUPPORTED_CHARITIES
+from dmlambda.handler import send_email
 
 story_post_parser = reqparse.RequestParser()
 story_post_parser.add_argument('charity_id', type=str, required=True, help='Name of charity')
@@ -73,6 +74,12 @@ class Campaign(Resource):
 
         # Put the object
         self.table.put_item(args)
+
+        # Notify the matcher
+        send_email(args["campaigner_email"], "Donatemates: Campaign Created!",
+                   "You just created a matching campaign with Donatemates! Keep track of your campaign and share with your friends and followers here: https://donatemates.com/campaign.html?id={}.".format(args["campaign_id"]))
+
+        # Return
         return {"campaign_id": args["campaign_id"]}, 201
 
 

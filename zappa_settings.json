@@ -89,15 +89,16 @@
   },
   "production": {
     "extends": "common",
-    "s3_bucket": "donatemates-api-production",
+    "s3_bucket": "api-production-donatemates",
     "domain": "api.donatemates.com",
+    "role_name": "production-lambda-execution-role",
     "environment_variables": {
       "STACK_NAME": "production",
       "DEBUG_MODE": "false"
     },
     "events": [
       {
-        "function": "dmlambda.process_email",
+        "function": "dmlambda.process_email_handler",
         "event_source": {
           "arn":  "arn:aws:s3:::email-production-donatemates",
           "events": [
