@@ -88,7 +88,7 @@ def send_email(to_address, subject, body):
     Returns:
         None
     """
-    client = boto3.client('ses')
+    client = boto3.client('ses', region_name="us-east-1")
     response = client.send_email(
         Source="hello@donatemates.com",
         Destination={'ToAddresses': [to_address]},

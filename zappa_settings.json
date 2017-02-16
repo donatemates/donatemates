@@ -107,13 +107,6 @@
         }
       }
     ],
-    "frontend_bucket": "aws-website-donatematesproduction-qq161",
-    "method_header_types": [
-      "Content-Type",
-      "Location",
-      "Status",
-      "X-Frame-Options",
-      "Set-Cookie"
-    ]
+    "frontend_bucket": "aws-website-donatematesproduction-qq161"
   }
 }

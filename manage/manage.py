@@ -219,7 +219,7 @@ class StackManager(object):
 
         # Write endpoint.js
         with open(os.path.join(root_path, 'frontend', 'endpoint.js'), 'wt') as endpoint_file:
-            endpoint_file.write('var rootUrl = "https://api-dean.donatemates.com/";'.format(zappa_config["domain"]))
+            endpoint_file.write('var rootUrl = "https://{}/";'.format(zappa_config["domain"]))
 
         # Update pre-launched bucket
         frontend_bucket = S3Bucket(zappa_config["frontend_bucket"])
