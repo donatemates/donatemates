@@ -53,11 +53,15 @@ def root():
 
 @app.after_request
 def after_request(response):
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+    response.headers.add('Access-Control-Allow-Methods', 'GET,POST,OPTIONS')
     if is_debug_mode():
         # If in debug mode, allow CORS
         response.headers.add('Access-Control-Allow-Origin', '*')
-        response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
-        response.headers.add('Access-Control-Allow-Methods', 'GET,POST,OPTIONS')
+    else:
+        # If not in debug mode, only allow donatemates.com
+        response.headers.add('Access-Control-Allow-Origin', 'https://donatemates.com')
+
     return response
 
 # Launch in dev mode if desired

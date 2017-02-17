@@ -1,1 +1,0 @@
-var rootUrl = "https://api-dean.donatemates.com/";

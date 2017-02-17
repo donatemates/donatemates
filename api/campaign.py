@@ -3,8 +3,10 @@ from api.aws import DynamoTable
 from flask_restful_swagger import swagger
 import arrow
 import shortuuid
+import uuid
 from .util import clean_dynamo_response
 from .charity import SUPPORTED_CHARITIES
+from dmlambda.handler import send_email
 
 story_post_parser = reqparse.RequestParser()
 story_post_parser.add_argument('charity_id', type=str, required=True, help='Name of charity')
@@ -64,7 +66,19 @@ class Campaign(Resource):
         if args["charity_id"] not in [c["id"] for c in SUPPORTED_CHARITIES]:
             abort(400, description="Unsupported charity: {}".format(args["charity_id"]))
 
-        args["campaign_id"] = shortuuid.uuid()
+        # Create campaign id
+        while True:
+            u = uuid.uuid4()
+            s = shortuuid.encode(u)[:5]
+            if not self.table.get_item({"campaign_id": s}):
+                break
+        printable = " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        name_str = filter(lambda x: x in printable, args["campaigner_name"].strip().lower())
+        name_str = name_str.replace(" ", "-")
+
+        args["campaign_id"] = "{}-{}".format(name_str, s)
+        args["campaigner_name"] = args["campaigner_name"].strip()
+        args["campaigner_email"] = args["campaigner_email"].strip()
         args["campaign_status"] = "active"
         args['notified_on'] = arrow.utcnow().isoformat()
         args['created_on'] = arrow.utcnow().isoformat()
@@ -73,6 +87,12 @@ class Campaign(Resource):
 
         # Put the object
         self.table.put_item(args)
+
+        # Notify the matcher
+        send_email(args["campaigner_email"], "Donatemates: Campaign Created!",
+                   "You just created a matching campaign with Donatemates! Keep track of your campaign and share with your friends and followers here: https://donatemates.com/campaign.html?id={}.".format(args["campaign_id"]))
+
+        # Return
         return {"campaign_id": args["campaign_id"]}, 201
 
 
@@ -108,7 +128,7 @@ class CampaignProperties(Resource):
         if not item:
             abort(404, description="Campaign '{}' not found".format(campaign_id))
 
-        item["donation_email"] = "match-{}@donatemates.com".format(item["campaign_id"])
+        item["donation_email"] = "{}@donatemates.com".format(item["campaign_id"])
 
         # Get donor amount stats
         amounts = self.donation_table.query_biggest("campaign_id", campaign_id, 5, index="DonationIndex")

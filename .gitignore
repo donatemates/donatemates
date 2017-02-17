@@ -4,3 +4,4 @@
 *.pyc
 /frontend/Archive.zip
 *ignore*
+/frontend/endpoint.js

@@ -57,6 +57,7 @@ class TestAPICampaign(APICampaignTestMixin, unittest.TestCase):
         # Create AWS Resources needed for tests
         cls.setup_helper.start_mocking()
         cls.setup_helper.create_tables()
+        cls.setup_helper.setup_ses()
 
     @classmethod
     def tearDownClass(cls):
