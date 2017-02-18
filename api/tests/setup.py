@@ -94,6 +94,7 @@ class SetupTests(object):
         print("\n ** Setting up SES mocking")
         ses = boto3.client('ses', region_name="us-east-1")
         # TODO: DMK Mock properly once moto is fixed
+        ses.verify_domain_identity(Domain='donatemates.com')
         #response = ses.verify_email_address(EmailAddress='hello@donatemates.com')
 
     def setup_ses(self):
