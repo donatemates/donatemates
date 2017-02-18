@@ -89,6 +89,31 @@ class AWSTestMixin(object):
 
         self.assertEqual(len(existing_receipts), 2)
 
+    def test_delete_item(self):
+        """Method to test receipt index"""
+        campaign_table = DynamoTable('campaigns')
+
+        # Add a record
+        data = {"campaign_id": "my_campaign",
+                "notified_on": arrow.utcnow().isoformat(),
+                "campaign_status": "active"
+                }
+        campaign_table.put_item(data)
+
+        # Verify write
+        key = {"campaign_id": "my_campaign"}
+        item = campaign_table.get_item(key)
+        assert item is not None
+        self.assertEqual(item["campaign_status"], "active")
+
+        # Delete
+        campaign_table.delete_item(key)
+
+        # Verify it deleted
+        item = campaign_table.get_item(key)
+        assert item is None
+
+
 
 class TestAWS(AWSTestMixin, unittest.TestCase):
 

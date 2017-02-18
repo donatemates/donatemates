@@ -3,7 +3,7 @@ from flask_restful import Api
 from flask_restful_swagger import swagger
 import os
 
-from api.campaign import Campaign, CampaignProperties
+from api.campaign import Campaign, CampaignProperties, CampaignDelete
 from api.charity import Charities
 
 
@@ -41,6 +41,9 @@ api.add_resource(Campaign, '/campaign',
 
 api.add_resource(CampaignProperties, '/campaign/<campaign_id>',
                                      '/campaign/<campaign_id>/')
+
+api.add_resource(CampaignDelete, '/campaign/<campaign_id>/<secret_key>',
+                                 '/campaign/<campaign_id>/<secret_key>/')
 
 api.add_resource(Charities, '/charities',
                             '/charities/')

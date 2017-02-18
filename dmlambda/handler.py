@@ -148,6 +148,13 @@ def process_email_handler(event, context):
             campaign_id = charity_class.get_campaign_id()
             print("CAMPAIGN ID: {}".format(campaign_id))
 
+            campaign = get_campaign(campaign_id)
+            if not campaign:
+                print("**** CAMPAIGN DOES NOT EXIST ****")
+                email_msg = "Sorry, the campaign email address you used does not exist. Double check and forward your receipt again!"
+                send_email(charity_class.from_email, "Donatemates: Campaign not found", email_msg)
+                return True
+
             if existing_receipts:
                 # This receipt already exists!
                 print("**** Duplicate receipt detected - Campaign: {} - Receipt: {} - Bucket: {} - Key: {} ****".format(campaign_id, data["receipt_id"], bucket, key))
@@ -172,7 +179,6 @@ def process_email_handler(event, context):
                        "Thank you for your donation of ${}. We've added it to the match campaign and have let the matcher know as well. Thank you!".format(data["donation_cents"] / 100))
 
             # Send notification to campaigner
-            campaign = get_campaign(campaign_id)
             campaigner_email = campaign["campaigner_email"]
 
             # Get updated total donation
@@ -182,6 +188,8 @@ def process_email_handler(event, context):
             if campaigner_email:
                 send_email(campaigner_email, "Donatemates: Campaign Update",
                            "Good news! {} just donated ${} to your campaign! You're at ${} out of the total ${} you've offered to match.".format(data["donor_name"], data["donation_cents"] / 100, donation_total_cents / 100, campaign["match_cents"] / 100))
+
+                # Update campaigner notification time
             else:
                 print("**** Failed to get the campaigner's email ****")
 

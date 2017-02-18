@@ -157,3 +157,52 @@ class CampaignProperties(Resource):
         item = clean_dynamo_response(item)
 
         return item, 200
+
+
+class CampaignDelete(Resource):
+
+    def __init__(self):
+        super(Resource, self).__init__()
+        self.campaign_table = DynamoTable('campaigns')
+
+    @swagger.operation(
+        notes='Delete a campaign',
+        nickname='Delete A Campaign',
+        parameters=[
+            {
+                "name": "campaign_id",
+                "description": "UUID of the campaign",
+                "required": True,
+                "allowMultiple": False,
+                "dataType": 'string',
+                "paramType": "path"
+            },
+            {
+                "name": "secret_key",
+                "description": "Secret key for the campaign to validate request",
+                "required": True,
+                "allowMultiple": False,
+                "dataType": 'string',
+                "paramType": "path"
+            }])
+    def delete(self, campaign_id, secret_key):
+        """Delete A Campaign"""
+        # Get the campaign
+        data = {"campaign_id": campaign_id}
+        item = None
+        try:
+            item = self.campaign_table.get_item(data)
+        except IOError as e:
+            abort(400, description=e.message)
+
+        if not item:
+            abort(404, description="Campaign '{}' not found".format(campaign_id))
+
+        if item["secret_id"] == secret_key:
+            # Delete
+            pass
+
+        else:
+            abort(403, description="Invalid Authorization Key")
+
+        return item, 204
