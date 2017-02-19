@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" name="viewport">
+    <title>Donatemates</title>
+    <meta name="description" content="Automated matching made easy." />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/png" href="icon.png" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script src="endpoint.js"></script>
+  </head>
+  <body>
+    <div class="wrapper">
+      <form>
+        <h2>Click to confirm you wish to cancel your campaign:</h2>
+        <button type="submit" class="js-cancel-trigger">Cancel campaign</button>
+      </form>
+    </div>
+    <script>
+      $(document).ready(function() {
+        var $cancelTrigger = $(".js-cancel-trigger");
+
+        $cancelTrigger.click(function(ev) {
+          ev.preventDefault();
+
+          $cancelTrigger.text("Cancelling campaign...");
+
+          $.post(rootUrl + "campaign/" + QueryString.id + "/" + QueryString.secret).done(
+            function(data) {
+              $cancelTrigger.text("Cancelled").attr('disabled', 'disabled');
+            }
+          ).fail(
+            function(jqXHR, textStatus, errorThrown) {
+              alert(jqXHR.responseText);
+              $cancelTrigger.text("Cancel campaign");
+            }
+          );
+        });
+      });
+    </script>
+  </body>
+</html>
