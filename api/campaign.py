@@ -202,8 +202,9 @@ class CampaignDelete(Resource):
             abort(404, description="Campaign '{}' not found".format(campaign_id))
 
         if item["secret_id"] == secret_key:
-            # Delete
-            self.campaign_table.delete_item(data)
+            # Update status to "cancelled"
+            key = {"campaign_id": campaign_id}
+            self.campaign_table.update_attribute(key, "campaign_status", "cancelled")
 
         else:
             abort(403, description="Invalid Authorization Key")

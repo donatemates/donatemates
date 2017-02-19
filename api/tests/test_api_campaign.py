@@ -98,7 +98,7 @@ class APICampaignTestMixin(object):
 
         # Verify it deleted
         item = campaign_table.get_item(key)
-        assert item is None
+        self.assertEqual(item["campaign_status"], "cancelled")
 
 
 class TestAPICampaign(APICampaignTestMixin, unittest.TestCase):
