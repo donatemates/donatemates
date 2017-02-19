@@ -79,6 +79,24 @@ class DynamoTable(object):
         else:
             return None
 
+    def delete_item(self, data):
+        """Method to get an item
+
+        Args:
+            data (dict): A dictionary of attributes to access an item (hash and sort keys)
+
+        Returns:
+            None
+        """
+        try:
+            response = self.table.delete_item(Key=data)
+
+        except ClientError as err:
+            raise IOError("Error deleting item: {}".format(err.message))
+
+        if response['ResponseMetadata']['HTTPStatusCode'] != 200:
+            raise IOError("Error deleting item: {}".format(response['ResponseMetadata']))
+
     def query_hash(self, hash_name, hash_value, index=None, forward=True, limit=None, projection=None):
         """Method to query an index
 

@@ -10,3 +10,5 @@ nose2
 shortuuid
 tqdm
 beautifulsoup4
+money
+babel

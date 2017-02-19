@@ -93,7 +93,6 @@ class SetupTests(object):
         """Method to verify an email so SES mocking works"""
         print("\n ** Setting up SES mocking")
         ses = boto3.client('ses', region_name="us-east-1")
-        # TODO: DMK Mock properly once moto is fixed
         ses.verify_domain_identity(Domain='donatemates.com')
         #response = ses.verify_email_address(EmailAddress='hello@donatemates.com')
 
@@ -123,6 +122,7 @@ class AWSSetupLayer(object):
             print("An error occurred while creating integration test tables. Deleting Tables. Try again. {}".format(err))
             cls.setup_helper.delete_tables()
 
+        # Always mock email for now. Test this via regression testing.
         cls.setup_helper.setup_ses()
 
     @classmethod
