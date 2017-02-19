@@ -162,7 +162,7 @@ def process_email_handler(event, context):
                 dm_email.send_donation_confirmation(data["donation_cents"])
 
             # Notify the campaigner if the campaign is active only
-            if campaign["active"]:
+            if campaign["campaign_status"] == "active":
                 # Update notification time (for future possible digest emails)
                 campaign_table.update_attribute(campaign_key, "notified_on", arrow.utcnow().isoformat())
 

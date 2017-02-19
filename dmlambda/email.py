@@ -56,7 +56,7 @@ class DonatematesEmail(object):
         donation = Money(amount=(donation / 100), currency="USD")
         donation = donation.format('en_US').split(".")[0]
 
-        email_msg = u"Thank you for your donation of ${}. We've added it to the match campaign and have let the matcher know as well. Thank you!".format(donation)
+        email_msg = u"Thank you for your donation of {}. We've added it to the match campaign and have let the matcher know as well. Thank you!".format(donation)
 
         subject = u"Donatemates: Donation confirmation"
 
@@ -83,9 +83,9 @@ class DonatematesEmail(object):
         campaign_target = Money(amount=(campaign_target / 100), currency="USD")
         campaign_target = campaign_target.format('en_US').split(".")[0]
 
-        email_msg = u"Good news! {} just donated ${} to your campaign! ".format(donor_name, donation)
-        email_msg += u"You're at ${} out of the total ${} you've offered to match.".format(campaign_total,
-                                                                                           campaign_target)
+        email_msg = u"Good news! {} just donated {} to your campaign! ".format(donor_name, donation)
+        email_msg += u"You're at {} out of the total {} you've offered to match.".format(campaign_total,
+                                                                                         campaign_target)
 
         subject = u"Donatemates: Campaign Update"
 
@@ -112,9 +112,9 @@ class DonatematesEmail(object):
         campaign_target = Money(amount=(campaign_target / 100), currency="USD")
         campaign_target = campaign_target.format('en_US').split(".")[0]
 
-        email_msg = u"Congrats! {} just donated ${} to your campaign! ".format(donor_name, donation)
-        email_msg += u"You have now raised ${}, achieving your ${} match target!".format(campaign_total,
-                                                                                         campaign_target)
+        email_msg = u"Congrats! {} just donated {} to your campaign! ".format(donor_name, donation)
+        email_msg += u"You have now raised {}, achieving your {} match target!".format(campaign_total,
+                                                                                       campaign_target)
 
         subject = u"Donatemates: Campaign Matched!"
 
