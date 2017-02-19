@@ -335,7 +335,6 @@ class DynamoTable(object):
 
         response_iterator = paginator.paginate(**params)
         for page in response_iterator:
-            for item in page["Items"]:
-                result_dict = eval_function(item, result_dict)
+            result_dict = eval_function(page["Items"], result_dict)
 
         return result_dict

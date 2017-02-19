@@ -92,9 +92,10 @@ class AWSTestMixin(object):
     def test_scan_table(self):
         """Method to test scanning a table"""
 
-        def scan_func(item, input_val):
-            if item["campaign_status"] == "complete":
-                input_val['count'] += 1
+        def scan_func(items, input_val):
+            for item in items:
+                if item["campaign_status"]["S"] == "complete":
+                    input_val['count'] += 1
             return input_val
 
         campaign_table = DynamoTable('campaigns')
@@ -112,7 +113,6 @@ class AWSTestMixin(object):
         campaign_table.scan_table(scan_func, result, "campaign_status")
 
         self.assertEqual(result["count"], 10)
-
 
 
 class TestAWS(AWSTestMixin, unittest.TestCase):

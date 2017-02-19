@@ -1,11 +1,6 @@
-from flask_restful import reqparse, Resource, abort
+from flask_restful import Resource
 from api.aws import DynamoTable
 from flask_restful_swagger import swagger
-import arrow
-import shortuuid
-import uuid
-from .util import clean_dynamo_response, send_email
-from .charity import SUPPORTED_CHARITIES
 
 
 class Stats(Resource):
@@ -22,5 +17,20 @@ class Stats(Resource):
     def get(self):
         """Get Site Stats"""
 
+        def campaign_count_func(items, result):
+            """Method to count campaigns"""
+            result["campaign_count"] += len(items)
 
-        return item, 200
+        def donation_func(items, result):
+            """Method to count campaigns"""
+            for item in items:
+                result["donation_count"] += 1
+                result["total_donation_cents"] += int(item["donation_cents"]["N"])
+
+        result = {"campaign_count": 0,
+                  "donation_count": 0,
+                  "total_donation_cents": 0}
+        self.campaign_table.scan_table(campaign_count_func, result, "campaign_id")
+        self.donation_table.scan_table(donation_func, result, "donation_cents")
+
+        return result, 200
