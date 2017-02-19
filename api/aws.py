@@ -316,3 +316,25 @@ class DynamoTable(object):
 
         return total_value
 
+    def scan_table(self, eval_function, result_dict, attribute_str):
+        """Method to scan a table, passing each item into an evaluation function
+
+        Args:
+            eval_function (function): Function to process the items
+            attribute_str (str): Comma separated string of attributes to get
+
+        Returns:
+            (dict) Result of the scan
+        """
+        client = boto3.client('dynamodb', region_name="us-east-1")
+        paginator = client.get_paginator('scan')
+        params = {"ProjectionExpression": attribute_str,
+                  "TableName": self.table_name,
+                  "PaginationConfig": {'PageSize': 500}
+                  }
+
+        response_iterator = paginator.paginate(**params)
+        for page in response_iterator:
+            result_dict = eval_function(page["Items"], result_dict)
+
+        return result_dict

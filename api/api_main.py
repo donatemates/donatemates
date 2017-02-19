@@ -5,6 +5,7 @@ import os
 
 from api.campaign import Campaign, CampaignProperties
 from api.charity import Charities
+from api.stats import Stats
 
 
 def is_debug_mode():
@@ -44,6 +45,9 @@ api.add_resource(CampaignProperties, '/campaign/<campaign_id>',
 
 api.add_resource(Charities, '/charities',
                             '/charities/')
+
+api.add_resource(Stats, '/stats',
+                        '/stats/')
 
 
 @app.route('/')
