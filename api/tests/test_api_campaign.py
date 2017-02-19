@@ -90,6 +90,7 @@ class APICampaignTestMixin(object):
         key = {"campaign_id": response["campaign_id"]}
         item = campaign_table.get_item(key)
         assert item is not None
+        self.assertEqual(item["campaign_status"], "active")
 
         # Delete
         rv = self.app.delete('/campaign/{}/{}'.format(response["campaign_id"], item["secret_id"]),

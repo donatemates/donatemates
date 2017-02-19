@@ -4,6 +4,7 @@ from api.aws import DynamoTable
 from api.api_main import api
 import json
 import arrow
+import shortuuid
 
 
 class APIStatsTestMixin(object):
@@ -34,9 +35,25 @@ class APIStatsTestMixin(object):
             self.assertEqual(rv.status_code, 201)
         response = json.loads(rv.data)
 
+        # Add some cancelled and matched campaignes
+        campaign_table = DynamoTable('campaigns')
+
+        for x in range(0, 4):
+            camp = {"campaign_id": shortuuid.uuid(),
+                    "notified_on": arrow.utcnow().isoformat(),
+                    "campaign_status": "cancelled",
+                    "match_cents": 20000}
+            campaign_table.put_item(camp)
+
+        for x in range(0, 2):
+            camp = {"campaign_id": shortuuid.uuid(),
+                    "notified_on": arrow.utcnow().isoformat(),
+                    "campaign_status": "matched",
+                    "match_cents": 20000}
+            campaign_table.put_item(camp)
+
         # Add some donations
         dontation_table = DynamoTable('donations')
-
         donations = []
         for x in range(0, 7):
             donation = {"campaign_id": response["campaign_id"],
@@ -51,7 +68,11 @@ class APIStatsTestMixin(object):
         self.assertEqual(rv.status_code, 200)
         response = json.loads(rv.data)
 
-        self.assertEqual(response["campaign_count"], 15)
+        self.assertEqual(response["campaign_count"], 21)
+        self.assertEqual(response["campaign_active_count"], 15)
+        self.assertEqual(response["campaign_matched_count"], 2)
+        self.assertEqual(response["campaign_cancelled_count"], 4)
+        self.assertEqual(response["campaign_total_cents"], 115000)
         self.assertEqual(response["donation_count"], 7)
         self.assertEqual(response["total_donation_cents"], 140000)
 

@@ -4,8 +4,10 @@ from flask_restful_swagger import swagger
 import arrow
 import shortuuid
 import uuid
-from .util import clean_dynamo_response, send_email
+from .util import clean_dynamo_response
 from .charity import SUPPORTED_CHARITIES
+
+from dmlambda.email import DonatematesEmail
 
 story_post_parser = reqparse.RequestParser()
 story_post_parser.add_argument('charity_id', type=str, required=True, help='Name of charity')
@@ -88,9 +90,8 @@ class Campaign(Resource):
         self.table.put_item(args)
 
         # Notify the matcher
-        msg = "You just created a matching campaign with Donatemates! \t\r\nKeep track of your campaign and share with your friends and followers here: https://donatemates.com/campaign.html?id={}.".format(args["campaign_id"])
-        msg = "{}\t\r\n\t\r\nIf you want to cancel your campaign in the future, visit this link: https://donatemates.com/cancel.html?id={}&secret={}".format(msg, args["campaign_id"], args["secret_id"])
-        send_email(args["campaigner_email"], "Donatemates: Campaign Created!", msg)
+        dm_email = DonatematesEmail(campaigner_address=args["campaigner_email"])
+        dm_email.send_campaign_created(args["campaign_id"], args["secret_id"])
 
         # Return
         return {"campaign_id": args["campaign_id"]}, 201
