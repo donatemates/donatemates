@@ -4,9 +4,8 @@ from flask_restful_swagger import swagger
 import arrow
 import shortuuid
 import uuid
-from .util import clean_dynamo_response
+from .util import clean_dynamo_response, send_email
 from .charity import SUPPORTED_CHARITIES
-from dmlambda.handler import send_email
 
 story_post_parser = reqparse.RequestParser()
 story_post_parser.add_argument('charity_id', type=str, required=True, help='Name of charity')
@@ -89,8 +88,9 @@ class Campaign(Resource):
         self.table.put_item(args)
 
         # Notify the matcher
-        send_email(args["campaigner_email"], "Donatemates: Campaign Created!",
-                   "You just created a matching campaign with Donatemates! Keep track of your campaign and share with your friends and followers here: https://donatemates.com/campaign.html?id={}.".format(args["campaign_id"]))
+        msg = "You just created a matching campaign with Donatemates! \t\r\nKeep track of your campaign and share with your friends and followers here: https://donatemates.com/campaign.html?id={}.".format(args["campaign_id"])
+        msg = "{}\t\r\n\t\r\nIf you want to cancel your campaign in the future, visit this link: https://donatemates.com/cancel.html?id={}&secret={}".format(msg, args["campaign_id"], args["secret_id"])
+        send_email(args["campaigner_email"], "Donatemates: Campaign Created!", msg)
 
         # Return
         return {"campaign_id": args["campaign_id"]}, 201
@@ -158,6 +158,9 @@ class CampaignProperties(Resource):
 
         return item, 200
 
+    def delete(self, campaign_id):
+        abort(403, description="Missing Authorization Key")
+
 
 class CampaignDelete(Resource):
 
@@ -200,9 +203,9 @@ class CampaignDelete(Resource):
 
         if item["secret_id"] == secret_key:
             # Delete
-            pass
+            self.campaign_table.delete_item(data)
 
         else:
             abort(403, description="Invalid Authorization Key")
 
-        return item, 204
+        return None, 204

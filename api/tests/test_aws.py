@@ -114,7 +114,6 @@ class AWSTestMixin(object):
         assert item is None
 
 
-
 class TestAWS(AWSTestMixin, unittest.TestCase):
 
     @classmethod

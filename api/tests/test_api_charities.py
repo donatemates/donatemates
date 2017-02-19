@@ -16,7 +16,7 @@ class APICharitiesTestMixin(object):
         self.assertEqual(response, SUPPORTED_CHARITIES)
 
 
-class TestAPICampaign(APICharitiesTestMixin, unittest.TestCase):
+class TestAPICharities(APICharitiesTestMixin, unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):

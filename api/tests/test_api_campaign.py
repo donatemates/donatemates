@@ -33,7 +33,7 @@ class APICampaignTestMixin(object):
         assert "campaign_id" in response
 
     def test_post_bad_charity(self):
-        """Method to test post"""
+        """Method to test invalid charity id"""
         data = {"charity_id": "aclusd",
                 "campaigner_name": "John Doeski",
                 "campaigner_email": "johndoeski@gmail.com",
@@ -41,6 +41,64 @@ class APICampaignTestMixin(object):
         rv = self.app.post('/campaign', data=data, follow_redirects=True)
 
         self.assertEqual(rv.status_code, 400)
+
+    def test_delete_invalid_args(self):
+        """Method to test delete error handling"""
+        data = {"charity_id": "aclu",
+                "campaigner_name": "John Doeski",
+                "campaigner_email": "johndoeski@gmail.com",
+                "match_cents": 5000}
+        rv = self.app.post('/campaign', data=data, follow_redirects=True)
+
+        self.assertEqual(rv.status_code, 201)
+        response = json.loads(rv.data)
+        assert "campaign_id" in response
+
+        # Delete
+        rv = self.app.delete('/campaign/',
+                             follow_redirects=True)
+        self.assertEqual(rv.status_code, 405)
+
+        rv = self.app.delete('/campaign/{}'.format(response["campaign_id"]),
+                             follow_redirects=True)
+        self.assertEqual(rv.status_code, 403)
+        rv = self.app.delete('/campaign/{}/'.format(response["campaign_id"]),
+                             follow_redirects=True)
+        self.assertEqual(rv.status_code, 403)
+
+        rv = self.app.delete('/campaign/{}/{}'.format(response["campaign_id"], "ajkshdfhkjasdf"),
+                             follow_redirects=True)
+        self.assertEqual(rv.status_code, 403)
+        rv = self.app.delete('/campaign/{}/{}/'.format(response["campaign_id"], "ajkshdfhkjasdf"),
+                             follow_redirects=True)
+        self.assertEqual(rv.status_code, 403)
+
+    def test_delete(self):
+        """Method to test deleting a charity"""
+        data = {"charity_id": "aclu",
+                "campaigner_name": "John Doeski",
+                "campaigner_email": "johndoeski@gmail.com",
+                "match_cents": 5000}
+        rv = self.app.post('/campaign', data=data, follow_redirects=True)
+
+        self.assertEqual(rv.status_code, 201)
+        response = json.loads(rv.data)
+        assert "campaign_id" in response
+
+        # Get charity object
+        campaign_table = DynamoTable('campaigns')
+        key = {"campaign_id": response["campaign_id"]}
+        item = campaign_table.get_item(key)
+        assert item is not None
+
+        # Delete
+        rv = self.app.delete('/campaign/{}/{}'.format(response["campaign_id"], item["secret_id"]),
+                             follow_redirects=True)
+        self.assertEqual(rv.status_code, 204)
+
+        # Verify it deleted
+        item = campaign_table.get_item(key)
+        assert item is None
 
 
 class TestAPICampaign(APICampaignTestMixin, unittest.TestCase):

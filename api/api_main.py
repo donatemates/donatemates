@@ -2,6 +2,7 @@ from flask import Flask, redirect
 from flask_restful import Api
 from flask_restful_swagger import swagger
 import os
+import logging
 
 from api.campaign import Campaign, CampaignProperties, CampaignDelete
 from api.charity import Charities
@@ -24,6 +25,10 @@ def is_debug_mode():
     return debug_mode
 
 
+# Set boto3 logging to info
+logger = logging.getLogger("boto3")
+logger.setLevel(logging.INFO)
+
 app = Flask(__name__)
 if is_debug_mode():
     api = swagger.docs(Api(app), apiVersion='0.1',
@@ -36,14 +41,14 @@ else:
 
 
 # Service to manage stories
-api.add_resource(Campaign, '/campaign',
-                           '/campaign/')
+api.add_resource(CampaignDelete, '/campaign/<campaign_id>/<secret_key>',
+                                 '/campaign/<campaign_id>/<secret_key>/')
 
 api.add_resource(CampaignProperties, '/campaign/<campaign_id>',
                                      '/campaign/<campaign_id>/')
 
-api.add_resource(CampaignDelete, '/campaign/<campaign_id>/<secret_key>',
-                                 '/campaign/<campaign_id>/<secret_key>/')
+api.add_resource(Campaign, '/campaign',
+                           '/campaign/')
 
 api.add_resource(Charities, '/charities',
                             '/charities/')
@@ -57,7 +62,7 @@ def root():
 @app.after_request
 def after_request(response):
     response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
-    response.headers.add('Access-Control-Allow-Methods', 'GET,POST,OPTIONS')
+    response.headers.add('Access-Control-Allow-Methods', 'GET,POST,DELETE,OPTIONS')
     if is_debug_mode():
         # If in debug mode, allow CORS
         response.headers.add('Access-Control-Allow-Origin', '*')

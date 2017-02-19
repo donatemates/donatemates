@@ -5,9 +5,11 @@ import os
 import arrow
 import charity
 import shortuuid
+import logging
 
 from api.campaign import SUPPORTED_CHARITIES
 from api.aws import DynamoTable
+from api.util import send_email
 
 
 def store_donation(data):
@@ -73,45 +75,16 @@ def get_campaign(campaign_id):
     if response['ResponseMetadata']['HTTPStatusCode'] != 200:
         raise IOError("Error getting item: {}".format(response['ResponseMetadata']))
 
-    return response["Item"]
-
-
-def send_email(to_address, subject, body):
-    """
-    Function to send an email from the default address
-
-    Args:
-        to_address(str): The email address to send to
-        subject(str): The email message subject
-        body(str): The email message body
-
-    Returns:
-        None
-    """
-    client = boto3.client('ses', region_name="us-east-1")
-    response = client.send_email(
-        Source="hello@donatemates.com",
-        Destination={'ToAddresses': [to_address]},
-        Message={
-            'Subject': {
-                'Data': subject,
-                'Charset': 'UTF-8'
-            },
-            'Body': {
-                'Text': {
-                    'Data': body,
-                    'Charset': 'UTF-8'
-                },
-                'Html': {
-                    'Data': body,
-                    'Charset': 'UTF-8'
-                }
-            }
-        })
-    print(response)
+    if "Item" in response:
+        return response["Item"]
+    else:
+        return None
 
 
 def process_email_handler(event, context):
+    logger = logging.getLogger("boto3")
+    logger.setLevel(logging.WARN)
+
     print("Received event: " + json.dumps(event, indent=2))
     print(event)
 
@@ -161,7 +134,7 @@ def process_email_handler(event, context):
                 # Notify user we didn't process it
                 email_msg = "Sorry, we weren't able to process your donation as it looks like you've already submitted it to Donatemates for a match campaign."
                 email_msg = "{} If you think this was an error, please forward this email to help@donatemates.com and we'll look into it. Thanks!".format(email_msg)
-                email_msg = "{} \r\n \r\nrequest_id: {}/{}/{}".format(email_msg, campaign_id, data["receipt_id"], key)
+                email_msg = "{} \t\r\n \t\r\n \t\r\n \t\r\nrequest_id: {}/{}/{}".format(email_msg, campaign_id, data["receipt_id"], key)
                 send_email(charity_class.from_email, "Donatemates: Unable to process donation", email_msg)
                 return True
 
