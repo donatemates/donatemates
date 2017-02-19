@@ -317,6 +317,11 @@ p {
   color: #AAAAAA;
 }
 
+p strong {
+  color: #454545;
+  font-weight: bold;
+}
+
 .small {
   font-size: 1.3em;
 }
