@@ -87,9 +87,8 @@ The tool is setup with the following `stack_names`:
 
 - `dean` - dev stack for @dkleissa
 - `sahil` - dev stack for @slavingia
-- ~~`jordan` - dev stack for @j6k4m8~~
-- ~~`stage` - stack for testing before production~~
-- ~~`production` - the production environment~~
+- `jordan` - dev stack for @j6k4m8
+- `production` - the production environment
 
 
 The following `actions` are supported:
@@ -104,7 +103,7 @@ Each stack is deployed into its own subdomain (except production). Once deployme
 
 - API: https://api-{stack_name}.donatemates.com
 - Frontend: https://{stack_name}.donatemates.com
-- Email Endpoint: {anything|campaign_id}@{stack_name}.donatemates.com
+- Email Endpoint: {anything|campaign_id}@{stack_name if not prod}.donatemates.com
 
 ## Running Tests
 

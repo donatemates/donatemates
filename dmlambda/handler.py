@@ -5,9 +5,11 @@ import os
 import arrow
 import charity
 import shortuuid
+import logging
 
 from api.campaign import SUPPORTED_CHARITIES
 from api.aws import DynamoTable
+from .email import DonatematesEmail
 
 
 def store_donation(data):
@@ -73,47 +75,17 @@ def get_campaign(campaign_id):
     if response['ResponseMetadata']['HTTPStatusCode'] != 200:
         raise IOError("Error getting item: {}".format(response['ResponseMetadata']))
 
-    return response["Item"]
-
-
-def send_email(to_address, subject, body):
-    """
-    Function to send an email from the default address
-
-    Args:
-        to_address(str): The email address to send to
-        subject(str): The email message subject
-        body(str): The email message body
-
-    Returns:
-        None
-    """
-    client = boto3.client('ses', region_name="us-east-1")
-    response = client.send_email(
-        Source="hello@donatemates.com",
-        Destination={'ToAddresses': [to_address]},
-        Message={
-            'Subject': {
-                'Data': subject,
-                'Charset': 'UTF-8'
-            },
-            'Body': {
-                'Text': {
-                    'Data': body,
-                    'Charset': 'UTF-8'
-                },
-                'Html': {
-                    'Data': body,
-                    'Charset': 'UTF-8'
-                }
-            }
-        })
-    print(response)
+    if "Item" in response:
+        return response["Item"]
+    else:
+        return None
 
 
 def process_email_handler(event, context):
+    logger = logging.getLogger("boto3")
+    logger.setLevel(logging.WARN)
+
     print("Received event: " + json.dumps(event, indent=2))
-    print(event)
 
     # Check if S3 event or CloudWatch invocation. If just keeping things hot, exit.
     if "Records" in event:
@@ -136,7 +108,25 @@ def process_email_handler(event, context):
 
         # Detect charity
         if charity_class.is_receipt():
-            # Found the charity, parse
+            # Found the charity
+
+            # Get campaign ID and campaign data
+            campaign_id = charity_class.get_campaign_id()
+            print("CAMPAIGN ID: {}".format(campaign_id))
+            campaign_table = DynamoTable('campaigns')
+            campaign_key = {"campaign_id": campaign_id}
+            campaign = campaign_table.get_item(campaign_key)
+
+            if not campaign:
+                print("WARNING: **** CAMPAIGN DOES NOT EXIST ****")
+                dm_email = DonatematesEmail(charity_class.from_email)
+                dm_email.send_campaign_does_not_exist()
+                return True
+
+            # Setup email sender
+            dm_email = DonatematesEmail(charity_class.from_email, campaign["campaigner_email"])
+
+            # Get donation receipt
             data = charity_class.parse_email()
             data["receipt_id"] = data["receipt_id"].strip()
 
@@ -144,18 +134,11 @@ def process_email_handler(event, context):
             donation_table = DynamoTable('donations')
             existing_receipts = donation_table.query_hash("receipt_id", data["receipt_id"],
                                                           index="ReceiptIndex", limit=10)
-            # Get campaign ID
-            campaign_id = charity_class.get_campaign_id()
-            print("CAMPAIGN ID: {}".format(campaign_id))
-
             if existing_receipts:
                 # This receipt already exists!
-                print("**** Duplicate receipt detected - Campaign: {} - Receipt: {} - Bucket: {} - Key: {} ****".format(campaign_id, data["receipt_id"], bucket, key))
+                print("WARNING: **** Duplicate receipt detected - Campaign: {} - Receipt: {} - Bucket: {} - Key: {} ****".format(campaign_id, data["receipt_id"], bucket, key))
                 # Notify user we didn't process it
-                email_msg = "Sorry, we weren't able to process your donation as it looks like you've already submitted it to Donatemates for a match campaign."
-                email_msg = "{} If you think this was an error, please forward this email to help@donatemates.com and we'll look into it. Thanks!".format(email_msg)
-                email_msg = "{} \r\n \r\nrequest_id: {}/{}/{}".format(email_msg, campaign_id, data["receipt_id"], key)
-                send_email(charity_class.from_email, "Donatemates: Unable to process donation", email_msg)
+                dm_email.send_duplicate_receipt(campaign_id, data["receipt_id"], key)
                 return True
 
             # Add donation record
@@ -167,23 +150,33 @@ def process_email_handler(event, context):
             print(data)
             store_donation(data)
 
-            # Send confirmation to donator
-            send_email(charity_class.from_email, "Donatemates Confirmation",
-                       "Thank you for your donation of ${}. We've added it to the match campaign and have let the matcher know as well. Thank you!".format(data["donation_cents"] / 100))
-
-            # Send notification to campaigner
-            campaign = get_campaign(campaign_id)
-            campaigner_email = campaign["campaigner_email"]
-
             # Get updated total donation
             donation_total_cents = donation_table.integer_sum_attribute("campaign_id", campaign_id, "donation_cents")
 
-            print("CAMPAIGNER EMAIL: {}".format(campaigner_email))
-            if campaigner_email:
-                send_email(campaigner_email, "Donatemates: Campaign Update",
-                           "Good news! {} just donated ${} to your campaign! You're at ${} out of the total ${} you've offered to match.".format(data["donor_name"], data["donation_cents"] / 100, donation_total_cents / 100, campaign["match_cents"] / 100))
+            # Notify the Donor
+            if campaign["campaign_status"] == "cancelled":
+                # If cancelled, only notify donor and let them know the campaign isn't going on.
+                dm_email.send_campaign_cancelled()
             else:
-                print("**** Failed to get the campaigner's email ****")
+                # Send standard confirmation to donor
+                dm_email.send_donation_confirmation(data["donation_cents"])
+
+            # Notify the campaigner if the campaign is active only
+            if campaign["campaign_status"] == "active":
+                # Update notification time (for future possible digest emails)
+                campaign_table.update_attribute(campaign_key, "notified_on", arrow.utcnow().isoformat())
+
+                if donation_total_cents >= campaign["match_cents"]:
+                    # Update campaign status to "matched"
+                    campaign_table.update_attribute(campaign_key, "campaign_status", "matched")
+
+                    # Send campaign completion email!
+                    dm_email.send_campaign_matched(data["donor_name"], data["donation_cents"],
+                                                   donation_total_cents, campaign["match_cents"])
+                else:
+                    # Send normal update
+                    dm_email.send_campaign_update(data["donor_name"], data["donation_cents"],
+                                                  donation_total_cents, campaign["match_cents"])
 
             # Exit
             return True
@@ -193,7 +186,7 @@ def process_email_handler(event, context):
     s3.Object('parse-fail-donatemates', '{}'.format(shortuuid.uuid())).copy_from(CopySource='{}/{}'.format(bucket, key))
 
     # Reply to user
-    print("**** Failed to detect a supported charity ****")
+    print("WARNING: **** Failed to detect a supported charity - Email Key: {} ****".format(key))
 
 
 

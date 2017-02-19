@@ -6,7 +6,8 @@ import shortuuid
 import uuid
 from .util import clean_dynamo_response
 from .charity import SUPPORTED_CHARITIES
-from dmlambda.handler import send_email
+
+from dmlambda.email import DonatematesEmail
 
 story_post_parser = reqparse.RequestParser()
 story_post_parser.add_argument('charity_id', type=str, required=True, help='Name of charity')
@@ -89,8 +90,8 @@ class Campaign(Resource):
         self.table.put_item(args)
 
         # Notify the matcher
-        send_email(args["campaigner_email"], "Donatemates: Campaign Created!",
-                   "You just created a matching campaign with Donatemates! Keep track of your campaign and share with your friends and followers here: https://donatemates.com/campaign.html?id={}.".format(args["campaign_id"]))
+        dm_email = DonatematesEmail(campaigner_address=args["campaigner_email"])
+        dm_email.send_campaign_created(args["campaign_id"], args["secret_id"])
 
         # Return
         return {"campaign_id": args["campaign_id"]}, 201
@@ -157,3 +158,56 @@ class CampaignProperties(Resource):
         item = clean_dynamo_response(item)
 
         return item, 200
+
+    def delete(self, campaign_id):
+        abort(403, description="Missing Authorization Key")
+
+
+class CampaignDelete(Resource):
+
+    def __init__(self):
+        super(Resource, self).__init__()
+        self.campaign_table = DynamoTable('campaigns')
+
+    @swagger.operation(
+        notes='Delete a campaign',
+        nickname='Delete A Campaign',
+        parameters=[
+            {
+                "name": "campaign_id",
+                "description": "UUID of the campaign",
+                "required": True,
+                "allowMultiple": False,
+                "dataType": 'string',
+                "paramType": "path"
+            },
+            {
+                "name": "secret_key",
+                "description": "Secret key for the campaign to validate request",
+                "required": True,
+                "allowMultiple": False,
+                "dataType": 'string',
+                "paramType": "path"
+            }])
+    def delete(self, campaign_id, secret_key):
+        """Delete A Campaign"""
+        # Get the campaign
+        data = {"campaign_id": campaign_id}
+        item = None
+        try:
+            item = self.campaign_table.get_item(data)
+        except IOError as e:
+            abort(400, description=e.message)
+
+        if not item:
+            abort(404, description="Campaign '{}' not found".format(campaign_id))
+
+        if item["secret_id"] == secret_key:
+            # Update status to "cancelled"
+            key = {"campaign_id": campaign_id}
+            self.campaign_table.update_attribute(key, "campaign_status", "cancelled")
+
+        else:
+            abort(403, description="Invalid Authorization Key")
+
+        return None, 204

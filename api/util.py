@@ -1,4 +1,5 @@
 from boto3.dynamodb.types import Decimal
+import boto3
 
 
 def clean_dynamo_response(data):
@@ -20,3 +21,4 @@ def clean_dynamo_response(data):
         if type(data[key]) is Decimal:
                     data[key] = float(data[key])
     return data
+
