@@ -27,7 +27,7 @@ def is_debug_mode():
 
 # Set boto3 logging to info
 logger = logging.getLogger("boto3")
-logger.setLevel(logging.INFO)
+logger.setLevel(logging.WARN)
 
 app = Flask(__name__)
 if is_debug_mode():
