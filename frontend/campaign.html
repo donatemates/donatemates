@@ -27,7 +27,7 @@
 
     <script src="script.js"></script>
     <script type="text/html" id="template">
-      <span class="header-label centered">Contribute to</span>
+      <span class="header-label centered" id="header-label">Contribute to</span>
       <h2 class="campaign-header centered"><span data-content="campaignerName"></span>'s <span data-content="matchAmount"></span> matching campaign for <span data-content="charityName"></span></h2>
       <div class="progress-bar">
         <div id="progress" class="progress"><strong data-content="matchedAmount"></strong> (<span data-content="matchedPercentage"></span>)</div>
@@ -47,7 +47,7 @@
         </div>
       </div>
       <hr />
-      <p class="centered">Donate by clicking <a href="#" id="donation-link">here</a>, forward the receipt email to <span data-content="donationEmail"></span>, and it'll show up here.</p>
+      <p id="active-notice" class="centered">Donate by clicking <a href="#" id="donation-link">here</a>, forward the receipt email to <span data-content="donationEmail"></span>, and it'll show up here.</p>
       <p class="footer centered">powered by</p>
       <a href="#"><h1>donatemates</h1></a>
     </script>
