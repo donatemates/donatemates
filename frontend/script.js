@@ -122,6 +122,11 @@ $(document).ready(function() {
         }
       }
 
+      if (data.campaign_status != "active") {
+        $("#active-notice").remove();
+        $("#header-label").text(data.campaign_status);
+      }
+
       $("#donation-link").attr("href", data.donation_url);
     }).fail(function() {
       $(".fourohfour-indicator").show();
