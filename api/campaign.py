@@ -159,19 +159,19 @@ class CampaignProperties(Resource):
 
         return item, 200
 
-    def delete(self, campaign_id):
+    def put(self, campaign_id):
         abort(403, description="Missing Authorization Key")
 
 
-class CampaignDelete(Resource):
+class CampaignCancel(Resource):
 
     def __init__(self):
         super(Resource, self).__init__()
         self.campaign_table = DynamoTable('campaigns')
 
     @swagger.operation(
-        notes='Delete a campaign',
-        nickname='Delete A Campaign',
+        notes='Cancel a campaign',
+        nickname='Cancel A Campaign',
         parameters=[
             {
                 "name": "campaign_id",
@@ -189,8 +189,8 @@ class CampaignDelete(Resource):
                 "dataType": 'string',
                 "paramType": "path"
             }])
-    def delete(self, campaign_id, secret_key):
-        """Delete A Campaign"""
+    def put(self, campaign_id, secret_key):
+        """Cancel A Campaign"""
         # Get the campaign
         data = {"campaign_id": campaign_id}
         item = None
