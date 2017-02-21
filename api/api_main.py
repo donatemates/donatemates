@@ -4,7 +4,7 @@ from flask_restful_swagger import swagger
 import os
 import logging
 
-from api.campaign import Campaign, CampaignProperties, CampaignDelete
+from api.campaign import Campaign, CampaignProperties, CampaignCancel
 from api.charity import Charities
 from api.stats import Stats
 
@@ -42,8 +42,8 @@ else:
 
 
 # Service to manage stories
-api.add_resource(CampaignDelete, '/campaign/<campaign_id>/<secret_key>',
-                                 '/campaign/<campaign_id>/<secret_key>/')
+api.add_resource(CampaignCancel, '/campaign/<campaign_id>/cancel/<secret_key>',
+                                 '/campaign/<campaign_id>/cancel/<secret_key>/')
 
 api.add_resource(CampaignProperties, '/campaign/<campaign_id>',
                                      '/campaign/<campaign_id>/')
@@ -66,7 +66,7 @@ def root():
 @app.after_request
 def after_request(response):
     response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
-    response.headers.add('Access-Control-Allow-Methods', 'GET,POST,DELETE,OPTIONS')
+    response.headers.add('Access-Control-Allow-Methods', 'GET,POST,OPTIONS')
     if is_debug_mode():
         # If in debug mode, allow CORS
         response.headers.add('Access-Control-Allow-Origin', '*')

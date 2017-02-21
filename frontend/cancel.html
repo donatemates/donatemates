@@ -50,8 +50,8 @@
           $cancelTrigger.text("Cancelling campaign...");
 
           $.ajax({
-            url: rootUrl + "campaign/" + QueryString.id + "/" + QueryString.secret,
-            type: "DELETE",
+            url: rootUrl + "campaign/" + QueryString.id + "/cancel/" + QueryString.secret,
+            type: "PUT",
           }).done(
             function(data) {
               $cancelTrigger.text("Cancelled").attr('disabled', 'disabled');

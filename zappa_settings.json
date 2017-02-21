@@ -3,7 +3,7 @@
     "app_function": "api.api_main.app",
     "aws_region": "us-east-1",
     "project_name": "donatemates-api",
-    "http_methods": ["GET", "POST"],
+    "http_methods": ["GET", "POST", "PUT"],
     "lets_encrypt_key": "account.key",
     "manage_roles": false,
     "environment_variables": {
