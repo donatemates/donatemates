@@ -29,11 +29,7 @@ export default class About extends Component {
                 </p>
                 <p><strong>{"Who's we?"}</strong></p>
                 <p>
-                    Donatemates is built by
-                    <a href="https://twitter.com/deankleissas">Dean</a>,
-                    <a href="https://twitter.com/j6m8">Jordan</a>, and
-                    <a href="https://twitter.com/shl">Sahil</a>.
-                    And you? We are <a href="https://github.com/donatemates/donatemates">open source</a>!
+                    Donatemates is built by <a href="https://twitter.com/deankleissas">Dean</a>, <a href="https://twitter.com/j6m8">Jordan</a>, and <a href="https://twitter.com/shl">Sahil</a>. And you? We are <a href="https://github.com/donatemates/donatemates">open source</a>!
                 </p>
 
                 <p><strong>Where can I follow along?</strong></p>
@@ -41,7 +37,8 @@ export default class About extends Component {
                 <p>
                     <a
                         className="twitter-follow-button"
-                        href="https://twitter.com/donatemates">Follow @donatemates</a>
+                        href="https://twitter.com/donatemates">{"Follow @donatemates"}
+                    </a>
                 </p>
             </div>
         );
