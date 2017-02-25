@@ -1,5 +1,5 @@
 module.exports = {
-    entry: './script.js',
+    entry: './index.jsx',
     output: {
         filename: 'dist/bundle.js', //this is the default name, so you can skip it
         //at this directory our bundle file will be available
@@ -14,6 +14,13 @@ module.exports = {
             options: {
                 limit: 25000,
             },
+        },
+        {
+            test: /\.jsx?$/,
+            loader: "babel-loader",
+            query: {
+                presets: ['react', 'es2015']
+            }
         },
         {
             test: /\.css$/,

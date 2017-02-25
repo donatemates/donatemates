@@ -1,72 +1,35 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" name="viewport">
-    <title>Donatemates</title>
-    <meta name="description" content="Automated matching made easy." />
-    <link rel="icon" type="image/png" href="icon.png" />
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" name="viewport">
+<title>Donatemates</title>
+<meta name="description" content="Automated matching made easy." />
+<link rel="icon" type="image/png" href="icon.png" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 
-    <meta name="twitter:card" value="summary">
-    <meta name="twitter:site" content="@donatemates">
+<meta name="twitter:card" value="summary">
+<meta name="twitter:site" content="@donatemates">
 
-    <meta property="og:title" content="Donatemates" />
-    <meta property="og:type" content="article" />
-    <meta property="og:url" content="https://donatemates.com/" />
-    <meta property="og:image" content="https://donatemates.com/icon.png" />
-    <meta property="og:description" content="Automated matching made easy." />
-  </head>
-  <body>
-    <div class="wrapper">
-      <h1>donatemates</h1>
-      <ol class="how-it-works">
-        <li><span>1</span>Create your match campaign</li>
-        <li><span>2</span>Share it with friends and followers</li>
-        <li><span>3</span>Get updates on every match</li>
-      </ol>
-      <form>
-        <h2>Create a match campaign:</h2>
-        <div class="container">
-          <div class="half relative">
-            <label for="amount">I will match up to:</label>
-            <label for="amount" class="label-prefix">$</label>
-            <input id="amount" type="text" placeholder="2,000" class="with-prefix number" />
-            <input id="match_cents" type="hidden" name="match_cents" />
-          </div>
-          <div class="half">
-            <label for="charity">Sent to:</label>
-            <select id="charity" name="charity_id">
-              <option>Loading...</option>
-            </select>
-          </div>
-        </div>
-        <div class="container">
-          <div class="half">
-            <label for="name">My name is:</label>
-            <input id="name" name="campaigner_name" type="text" placeholder="Joseph Smith" />
-          </div>
-          <div class="half">
-            <label for="email">Keep me updated at:</label>
-            <input id="email" name="campaigner_email" type="email" placeholder="Email address" />
-          </div>
-        </div>
-        <button type="submit" class="js-create-campaign-trigger">Create campaign</button>
-      </form>
-      <p class="centered small hidden">ps. <a href="campaign.html">here's an example</a>.</p>
-      <p class="centered small"><a href="about.html">about us</a>.</p>
-    </div>
+<meta property="og:title" content="Donatemates" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://donatemates.com/" />
+<meta property="og:image" content="https://donatemates.com/icon.png" />
+<meta property="og:description" content="Automated matching made easy." />
+</head>
+<body>
+    <div id="react-target"></div>
 
-    <script src="bundle.js"></script>
-    <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+<script src="bundle.js"></script>
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 
-      ga('create', 'UA-92313343-1', 'auto');
-      ga('send', 'pageview');
+ga('create', 'UA-92313343-1', 'auto');
+ga('send', 'pageview');
 
-    </script>
-  </body>
+</script>
+</body>
 </html>
