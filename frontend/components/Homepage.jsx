@@ -14,14 +14,23 @@ export default class Homepage extends Component {
     }
 
     submitForm() {
+
+        if (!this.refs.name.value) { alert("Please provide a valid name."); }
+        if (!this.refs.amount.value) { alert("Please provide a valid amount."); }
+        if (!this.refs.charity.value) { alert("Please provide a valid charity."); }
+        if (!this.refs.email.value) { alert("Please provide a valid email."); }
+
         let campaign = {
-            name: this.refs.name.value,
-            amount: this.refs.amount.value,
-            charity: this.refs.charity.value,
-            email: this.refs.email.value
+            campaigner_name: this.refs.name.value,
+            match_cents: parseFloat(this.refs.amount.value) * 100,
+            charity_id: this.refs.charity.value,
+            campaigner_email: this.refs.email.value
         };
 
-        console.log(campaign)
+        fetch('https://api.donatemates.com/campaign', {
+            method: "POST",
+            body: JSON.stringify(campaign)
+        });
     }
 
     componentDidMount() {
@@ -79,14 +88,10 @@ export default class Homepage extends Component {
                             <input
                                 id="amount"
                                 type="text"
+                                ref="amount"
                                 placeholder="2,000"
                                 className="with-prefix number"
                                 />
-                            <input
-                                id="match_cents"
-                                type="hidden"
-                                name="match_cents"
-                                ref="amount" />
                         </div>
                         <div className="half">
                             <label htmlFor="charity">Sent to:</label>
