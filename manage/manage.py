@@ -215,15 +215,23 @@ class StackManager(object):
         print("\n ** Updating Frontend {}".format(self.stack_name))
 
         # get zappa config
+        print("\n ** Emptying Frontend Bucket Contents".format(self.stack_name))
+        root_path, zappa_config = self.get_zappa_config()
+        frontend_bucket = S3Bucket(zappa_config["frontend_bucket"])
+        if frontend_bucket.exists():
+            frontend_bucket.empty()
+
+        # get zappa config
         root_path, zappa_config = self.get_zappa_config()
 
+        print("\n ** Writing Frontend Bucket Contents".format(self.stack_name))
         # Write endpoint.js
         with open(os.path.join(root_path, 'frontend', 'endpoint.js'), 'wt') as endpoint_file:
             endpoint_file.write('var rootUrl = "https://{}/";'.format(zappa_config["domain"]))
 
         # Update pre-launched bucket
         frontend_bucket = S3Bucket(zappa_config["frontend_bucket"])
-        frontend_bucket.copy_dir(os.path.join(root_path, 'frontend'))
+        frontend_bucket.copy_dir(os.path.join(root_path, 'frontend', 'dist'))
 
     def delete(self):
         """Method to delete a Stack
