@@ -1,3 +1,5 @@
+import css from './style.css';
+
 $(document).ready(function() {
   // Fetch list of charities:
 
@@ -60,7 +62,7 @@ $(document).ready(function() {
   // Refresh campaign data:
 
   var QueryString = function() {
-    // This function is anonymous, is executed immediately and 
+    // This function is anonymous, is executed immediately and
     // the return value is assigned to QueryString!
     var query_string = {};
     var query = window.location.search.substring(1);
@@ -78,7 +80,7 @@ $(document).ready(function() {
       } else {
         query_string[pair[0]].push(decodeURIComponent(pair[1]));
       }
-    } 
+    }
     return query_string;
   }();
 
