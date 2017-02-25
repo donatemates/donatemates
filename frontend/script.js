@@ -1,4 +1,5 @@
 import css from './style.css';
+import './jquery.loadTemplate-0.4.3.js';
 
 $(document).ready(function() {
   // Fetch list of charities:
