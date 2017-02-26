@@ -5,3 +5,4 @@
 /frontend/Archive.zip
 *ignore*
 /frontend/endpoint.js
+/frontend/node_modules
