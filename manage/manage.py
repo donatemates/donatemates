@@ -228,7 +228,7 @@ class StackManager(object):
             )
             endpoint_file.write(root_url_string)
 
-        old_path = os.get_cwd()
+        old_path = os.getcwd()
         print("  * Generating webpack bundle...")
         os.chdir('frontend')
         execute_in_virtualenv(get_current_venv(), 'webpack -p')

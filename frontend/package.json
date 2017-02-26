@@ -17,6 +17,8 @@
     "css-loader": "^0.26.2",
     "file-loader": "^0.10.1",
     "html-loader": "^0.4.5",
+    "less": "^2.7.2",
+    "less-loader": "^2.2.3",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
     "react-router": "^3.0.2",
