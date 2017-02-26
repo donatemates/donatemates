@@ -8,24 +8,28 @@ module.exports = {
     },
     module: {
         loaders: [
-        {
-            test: /\.(jpg|png)$/,
-            loader: 'url-loader',
-            options: {
-                limit: 25000,
+            {
+                test: /\.(jpg|png)$/,
+                loader: 'url-loader',
+                options: {
+                    limit: 25000,
+                },
             },
-        },
-        {
-            test: /\.jsx?$/,
-            loader: "babel-loader",
-            query: {
-                presets: ['react', 'es2015']
+            {
+                test: /\.jsx?$/,
+                loader: "babel-loader",
+                query: {
+                    presets: ['react', 'es2015']
+                }
+            },
+            {
+                test: /\.less$/,
+                use: [
+                    'style-loader',
+                    { loader: 'css-loader', options: { importLoaders: 1 } },
+                    'less-loader'
+                ]
             }
-        },
-        {
-            test: /\.css$/,
-            use: [ 'style-loader', 'css-loader' ]
-        }
         ]
     }
 }
