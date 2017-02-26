@@ -6,6 +6,7 @@ import css from './style.css';
 
 import Homepage from './components/Homepage.jsx';
 import About from './components/About.jsx';
+import NotFound from './components/NotFound.jsx';
 
 
 class MainLayout extends Component {
@@ -25,6 +26,7 @@ const routes = {
     indexRoute: { component: Homepage },
     childRoutes: [
         { path: 'about', component: About },
+        { path: '*', component: NotFound },
     //     { path: 'inbox', component: Inbox },
     ]
 }
