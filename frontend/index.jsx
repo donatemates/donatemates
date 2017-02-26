@@ -27,7 +27,7 @@ const routes = {
     indexRoute: { component: Homepage },
     childRoutes: [
         { path: 'about', component: About },
-        { path: 'campaign', component: Campaign },
+        { path: 'campaign/:campaign_id', component: Campaign },
         { path: '*', component: NotFound },
     //     { path: 'inbox', component: Inbox },
     ]

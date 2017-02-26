@@ -20,7 +20,8 @@ export default class Campaign extends Component {
     }
 
     componentDidMount() {
-
+        // TODO: fetch() the campaign here, or redirect to 404.
+        // fetch('this.props.params.campaign_id')
         this.setState({
             campaigner_name: "Jordan",
             donation_email: "test@donatemates.com",
