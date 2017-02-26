@@ -1,3 +1,4 @@
+dm-env/
 .DS_Store
 /.idea
 /account.key

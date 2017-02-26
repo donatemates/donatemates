@@ -1,0 +1,1 @@
+var rootUrl = "https://api-jordan.donatemates.com/";
