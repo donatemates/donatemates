@@ -6,6 +6,7 @@ import css from './style.css';
 
 import Homepage from './components/Homepage.jsx';
 import About from './components/About.jsx';
+import Campaign from './components/Campaign.jsx';
 import NotFound from './components/NotFound.jsx';
 
 
@@ -26,6 +27,7 @@ const routes = {
     indexRoute: { component: Homepage },
     childRoutes: [
         { path: 'about', component: About },
+        { path: 'campaign', component: Campaign },
         { path: '*', component: NotFound },
     //     { path: 'inbox', component: Inbox },
     ]
