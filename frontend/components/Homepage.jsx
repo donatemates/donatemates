@@ -15,7 +15,9 @@ export default class Homepage extends Component {
         this.submitForm = this.submitForm.bind(this);
     }
 
-    submitForm() {
+    submitForm(ev) {
+
+        ev.preventDefault();
 
         if (!this.refs.name.value) { alert("Please provide a valid name."); }
         if (!this.refs.amount.value) { alert("Please provide a valid amount."); }
@@ -29,7 +31,7 @@ export default class Homepage extends Component {
             campaigner_email: this.refs.email.value
         };
 
-        fetch('https://api.donatemates.com/campaign', {
+        fetch(`${ rootUrl }campaign`, {
             method: "POST",
             body: JSON.stringify(campaign)
         });

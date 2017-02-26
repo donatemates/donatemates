@@ -6,6 +6,7 @@ import css from './style.less';
 
 import Homepage from './components/Homepage.jsx';
 import About from './components/About.jsx';
+import Cancel from './components/Cancel.jsx';
 import Campaign from './components/Campaign.jsx';
 import NotFound from './components/NotFound.jsx';
 
@@ -28,6 +29,7 @@ const routes = {
     childRoutes: [
         { path: 'about', component: About },
         { path: 'campaign/:campaign_id', component: Campaign },
+        { path: 'cancel/:campaign_id/:secret', component: Cancel },
         { path: '*', component: NotFound },
     //     { path: 'inbox', component: Inbox },
     ]
