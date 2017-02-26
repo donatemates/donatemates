@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router';
 
+import rootUrl from '../endpoint.js';
+
 export default class Homepage extends Component {
 
     constructor(opts) {
@@ -34,40 +36,15 @@ export default class Homepage extends Component {
     }
 
     componentDidMount() {
-        // fetch('https://api.donatemates.com/charities').then(res => {
-        //     if (res.ok) {
-        //         res.json().then(availableCharities => {
-        //             this.setState({
-        //                 options: availableCharities
-        //             })
-        //         })
-        //     }
-        // });
-        this.setState({
-            options: [
-                {
-                    "donation_url": "https://action.aclu.org/donate-aclu?redirect=donate/join-renew-give",
-                    "class": "ACLUParser",
-                    "conversational_name": "the ACLU",
-                    "id": "aclu",
-                    "name": "ACLU"
-                },
-                {
-                    "donation_url": "https://donate.doctorswithoutborders.org/onetime.cfm",
-                    "class": "MSFParser",
-                    "conversational_name": "Doctors Without Borders",
-                    "id": "msf",
-                    "name": "Doctors without Borders"
-                },
-                {
-                    "donation_url": "https://secure.ppaction.org/site/Donation2?df_id=12913&12913.donation=form1",
-                    "class": "PPParser",
-                    "conversational_name": "Planned Parenthood",
-                    "id": "pp",
-                    "name": "Planned Parenthood"
-                }
-            ]
-        })
+        fetch(`${ rootUrl }charities/`).then(res => {
+            if (res.ok) {
+                res.json().then(availableCharities => {
+                    this.setState({
+                        options: availableCharities
+                    })
+                })
+            }
+        });
     }
 
     render() {

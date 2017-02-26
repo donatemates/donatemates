@@ -3,6 +3,9 @@ import { browserHistory } from 'react-router';
 import NotFound from './NotFound.jsx';
 
 import utils from '../utils.js';
+import rootUrl from '../endpoint.js';
+
+console.log(rootUrl)
 
 
 class DonorRow extends Component {
@@ -29,7 +32,7 @@ export default class Campaign extends Component {
 
     componentDidMount() {
         // TODO: fetch() the campaign here, or redirect to 404.
-        fetch(`https://api-jordan.donatemates.com/campaign/${this.props.params.campaign_id}`).then(res => {
+        fetch(`${ rootUrl }campaign/${this.props.params.campaign_id}`).then(res => {
             if (res.ok) {
                 res.json().then(json => {
                     this.setState({

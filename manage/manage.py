@@ -217,9 +217,22 @@ class StackManager(object):
         # get zappa config
         root_path, zappa_config = self.get_zappa_config()
 
+
+        print("  * Generating endpoint.js...")
         # Write endpoint.js
-        with open(os.path.join(root_path, 'frontend/dist', 'endpoint.js'), 'wt') as endpoint_file:
-            endpoint_file.write('var rootUrl = "https://{}/";'.format(zappa_config["domain"]))
+        with open(os.path.join(root_path, 'frontend', 'endpoint.js'), 'wt') as endpoint_file:
+            root_url_string = (
+                "const rootUrl = 'https://{}/'; export default rootUrl;".format(
+                    zappa_config["domain"]
+                )
+            )
+            endpoint_file.write(root_url_string)
+
+        old_path = os.get_cwd()
+        print("  * Generating webpack bundle...")
+        os.chdir('frontend')
+        execute_in_virtualenv(get_current_venv(), 'webpack -p')
+        os.chdir(old_path)
 
         # Update pre-launched bucket
         frontend_bucket = S3Bucket(zappa_config["frontend_bucket"])
