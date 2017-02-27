@@ -16,9 +16,9 @@ class DonatematesEmail(object):
             None
         """
         email_msg = u"Sorry, the campaign email address you used does not appear to be valid. "
-        email_msg += u"Double check the campaign email address and forward your receipt again!"
+        email_msg += u"\r\nDouble check the campaign email address and forward your receipt again!"
         subject = u"Donatemates: Campaign not found"
-        self.send_email(self.donor_address, subject, email_msg, email_msg)
+        self.send_email(self.donor_address, subject, email_msg, self.lame_html(email_msg))
 
     def send_campaign_cancelled(self):
         """Method to send a confirmation email to a donor when the campaign has been cancelled
@@ -37,12 +37,13 @@ class DonatematesEmail(object):
             None
         """
         email_msg = u"Sorry, we weren't able to process your donation as it looks like you've already submitted it to Donatemates for a match campaign. "
-        email_msg += u"If you think this was an error, please forward this email to help@donatemates.com and we'll look into it. Thanks!"
-        email_msg += u"\t\r\n  \t\r\n  \t\r\n  \t\r\nrequest_id: {}/{}/{}".format(campaign_id, receipt_id, email_key)
+        email_msg += u"\r\nIf you think this was an error, please forward this email to help@donatemates.com and we'll look into it. Thanks!"
+        email_msg += u"\r\n\r\nThanks!\r\n - Donatemates"
+        email_msg += u"\r\n \r\n \r\n \r\nrequest_id: {}/{}/{}".format(campaign_id, receipt_id, email_key)
 
         subject = u"Donatemates: Unable to process donation"
 
-        self.send_email(self.donor_address, subject, email_msg, email_msg)
+        self.send_email(self.donor_address, subject, email_msg, self.lame_html(email_msg))
 
     def send_donation_confirmation(self, donation):
         """Method to send a confirmation to a donor
@@ -56,11 +57,12 @@ class DonatematesEmail(object):
         donation = Money(amount=(donation / 100), currency="USD")
         donation = donation.format('en_US').split(".")[0]
 
-        email_msg = u"Thank you for your donation of {}. We've added it to the match campaign and have let the matcher know as well. Thank you!".format(donation)
+        email_msg = u"Thank you for your donation of {}!\r\n We've added it to the match campaign and have let the matcher know as well.".format(donation)
+        email_msg += u"\r\n\r\nThanks!\r\n - Donatemates"
 
         subject = u"Donatemates: Donation confirmation"
 
-        self.send_email(self.donor_address, subject, email_msg, email_msg)
+        self.send_email(self.donor_address, subject, email_msg, self.lame_html(email_msg))
 
     def send_campaign_update(self, donor_name, donation, campaign_total, campaign_target):
         """Method to send a confirmation to a donor
@@ -84,12 +86,12 @@ class DonatematesEmail(object):
         campaign_target = campaign_target.format('en_US').split(".")[0]
 
         email_msg = u"Good news! {} just donated {} to your campaign! ".format(donor_name, donation)
-        email_msg += u"You're at {} out of the total {} you've offered to match.".format(campaign_total,
-                                                                                         campaign_target)
+        email_msg += u"\r\nYou're at {} out of the total {} you've offered to match.".format(campaign_total,
+                                                                                             campaign_target)
 
         subject = u"Donatemates: Campaign Update"
 
-        self.send_email(self.campaigner_address, subject, email_msg, email_msg)
+        self.send_email(self.campaigner_address, subject, email_msg, self.lame_html(email_msg))
 
     def send_campaign_matched(self, donor_name, donation, campaign_total, campaign_target):
         """Method to send a confirmation to a campaigner when their campaign has been matched
@@ -113,12 +115,12 @@ class DonatematesEmail(object):
         campaign_target = campaign_target.format('en_US').split(".")[0]
 
         email_msg = u"Congrats! {} just donated {} to your campaign! ".format(donor_name, donation)
-        email_msg += u"You have now raised {}, achieving your {} match target!".format(campaign_total,
-                                                                                       campaign_target)
+        email_msg += u"\r\nYou have now raised {}, achieving your {} match target!".format(campaign_total,
+                                                                                           campaign_target)
 
         subject = u"Donatemates: Campaign Matched!"
 
-        self.send_email(self.campaigner_address, subject, email_msg, email_msg)
+        self.send_email(self.campaigner_address, subject, email_msg, self.lame_html(email_msg))
 
     def send_campaign_created(self, campaign_id, secret_id):
         """Method to send a confirmation to a campaigner when their campaign has been matched
@@ -130,13 +132,17 @@ class DonatematesEmail(object):
         Returns:
             None
         """
-        email_msg = u"You just created a matching campaign with Donatemates!"
-        email_msg += u"\t\r\n \t\r\nKeep track of your campaign and share with your friends and followers here: https://donatemates.com/campaign/{}. ".format(campaign_id)
-        email_msg += u"\t\r\n  \t\r\nIf you want to cancel your campaign in the future, visit this link: https://donatemates.com/cancel/{}/{}".format(campaign_id, secret_id)
+        email_msg = u"You just created a matching campaign with Donatemates! "
+        email_msg += u"\r\nKeep track of your campaign and share with your friends and followers here: https://donatemates.com/campaign/{}. ".format(campaign_id)
+        email_msg += u"\r\n \r\nIf you want to cancel your campaign in the future, visit this link: https://donatemates.com/cancel/{}/{}".format(campaign_id, secret_id)
 
         subject = u"Donatemates: Campaign Created"
 
-        self.send_email(self.campaigner_address, subject, email_msg, email_msg)
+        self.send_email(self.campaigner_address, subject, email_msg, self.lame_html(email_msg))
+
+    def lame_html(self, plaintext):
+        """Temporary conversion from plain-text to html until better emails are created"""
+        return plaintext.replace("\r\n", "<br>")
 
     def send_email(self, to_address, subject, plain_text, html):
         """
