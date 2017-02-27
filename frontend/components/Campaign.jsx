@@ -81,7 +81,7 @@ export default class Campaign extends Component {
                             minWidth: (this.state.donation_total_cents / this.state.match_cents * 100).toFixed(2) + "%"
                         }}>
                             <strong data-content="matchedAmount">
-                                { utils.formatCurrency(this.state.match_cents) }
+                                { utils.formatCurrency(this.state.donation_total_cents) }
                             </strong>&nbsp;
                             (<span data-content="matchedPercentage">
                                 {
