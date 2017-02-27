@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router';
+import { Link, browserHistory } from 'react-router';
 
 import rootUrl from '../endpoint.js';
 
@@ -25,23 +25,27 @@ export default class Homepage extends Component {
         if (!this.refs.email.value) { alert("Please provide a valid email."); }
 
         let campaign = {
+            charity_id: this.refs.charity.value,
             campaigner_name: this.refs.name.value,
             match_cents: parseFloat(this.refs.amount.value) * 100,
-            charity_id: this.refs.charity.value,
             campaigner_email: this.refs.email.value
         };
 
-        fetch(`${ rootUrl }campaign/`, {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(campaign)
+
+        var query = "";
+        for (let key in campaign) {
+            query += encodeURIComponent(key)+"="+encodeURIComponent(campaign[key])+"&";
+        }
+        fetch(`${ rootUrl }campaign/?${query}`, {
+            method: "POST"
         }).then(res => {
             res.json().then(json => {
-                console.log(json)
+                browserHistory.push('/campaign/' + json.campaign_id);
             })
         });
+        this.setState({
+            submitted: true
+        })
     }
 
     componentDidMount() {
@@ -57,6 +61,9 @@ export default class Homepage extends Component {
     }
 
     render() {
+        if (this.state.submitted) {
+            return (<div>Loading...</div>)
+        }
         return (
             <div className="wrapper">
                 <h1>donatemates</h1>
@@ -85,7 +92,7 @@ export default class Homepage extends Component {
                                 id="charity"
                                 ref="charity"
                                 name="charity_id"
-                            >
+                                >
                                 { this.state.options.map(o => {
                                     return (
                                         <option
