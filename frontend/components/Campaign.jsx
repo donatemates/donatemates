@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import { browserHistory } from 'react-router';
 import NotFound from './NotFound.jsx';
 
+import Loading from './Loading.jsx';
+
 import utils from '../utils.js';
 import rootUrl from '../endpoint.js';
-
-console.log(rootUrl)
 
 
 class DonorRow extends Component {
@@ -65,7 +65,7 @@ export default class Campaign extends Component {
             return <NotFound />
         }
         if (!this.state.donation_url) {
-            return (<div className="loading-indicator">Loading...</div>);
+            return (<Loading />);
         }
         return (
             <div className="wrapper" id="template-container">

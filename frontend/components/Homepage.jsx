@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Link, browserHistory } from 'react-router';
+import Loading from './Loading.jsx';
 
 import rootUrl from '../endpoint.js';
 
@@ -62,7 +63,7 @@ export default class Homepage extends Component {
 
     render() {
         if (this.state.submitted) {
-            return (<div>Loading...</div>)
+            return (<Loading />);
         }
         return (
             <div className="wrapper">
