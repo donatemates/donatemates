@@ -8,3 +8,4 @@ dm-env/
 /frontend/endpoint.js
 /frontend/node_modules
 /frontend/dist/bundle.js
+/frontend/dist/static/bundle.js

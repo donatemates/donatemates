@@ -259,6 +259,12 @@ class StackManager(object):
         # Build Webpack
         print("  ** Generating webpack bundle...")
         subprocess.call('webpack -p', shell=True, executable="/bin/bash")
+
+        # Reorganize files
+        os.rename(os.path.join(root_path, 'frontend', 'dist', 'bundle.js'),
+                  os.path.join(root_path, 'frontend', 'dist', 'static', 'bundle.js'))
+
+        # Set dir back
         os.chdir(old_path)
 
         # Update pre-launched bucket
