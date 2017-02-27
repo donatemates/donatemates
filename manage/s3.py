@@ -3,6 +3,7 @@ import glob
 import os
 from tqdm import tqdm
 from mimetypes import guess_type
+from .util import get_account_id
 
 
 class S3Bucket(object):
@@ -106,7 +107,7 @@ class S3Bucket(object):
 
         """
         # Get the account ID
-        account_id = boto3.client('sts').get_caller_identity()['Account']
+        account_id = get_account_id()
 
         policy_str = """{
             "Version": "2008-10-17",

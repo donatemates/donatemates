@@ -1,5 +1,6 @@
 import os
 import subprocess
+import boto3
 
 
 def get_current_venv():
@@ -48,3 +49,12 @@ def get_current_venv():
             print("Zappa requires an active virtual environment.")
             quit()
     return venv
+
+
+def get_account_id():
+    """Method to get the AWS account ID
+
+    Returns:
+
+    """
+    return boto3.client('sts').get_caller_identity()['Account']

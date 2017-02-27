@@ -7,3 +7,4 @@ dm-env/
 *ignore*
 /frontend/endpoint.js
 /frontend/node_modules
+/frontend/dist/bundle.js

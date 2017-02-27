@@ -2,9 +2,11 @@ from pkg_resources import resource_filename
 from .dynamo import DynamoDB
 from .s3 import S3Bucket
 from .iam import IAM
+from .cloudfront import CloudFront
 from api.aws import DynamoTable
 import json
 import boto3
+import subprocess
 
 import os
 import shlex
@@ -166,6 +168,11 @@ class StackManager(object):
         print("\n ** Updating Frontend ".format(self.stack_name))
         self.update_frontend()
 
+        # Update CloudFront
+        print("\n ** Updating CloudFront Lambda Function")
+        cf = CloudFront(self.stack_name)
+        cf.assign_rewrite_lambda()
+
         print("\n\nCreate Complete!")
 
     def update(self):
@@ -189,7 +196,7 @@ class StackManager(object):
             else:
                 raise Exception("Unknown response from zappa on check for stack: {}".format(stderr))
         else:
-            # Stack exists. Tear it down.
+            # Stack exists. Update it
             stdout, stderr = execute_in_virtualenv(get_current_venv(),
                                                    "zappa update {}".format(self.stack_name))
             if "Your updated Zappa deployment is live!" in stdout:
@@ -199,9 +206,14 @@ class StackManager(object):
                 print(stdout)
                 print("Error Stream:")
                 print(stderr)
-
+            
         # Update the frontend
         self.update_frontend()
+
+        # Update CloudFront
+        print("\n ** Updating CloudFront Lambda Function")
+        cf = CloudFront(self.stack_name)
+        cf.assign_rewrite_lambda()
 
         print("\n\nUpdate Complete!")
 
@@ -215,7 +227,7 @@ class StackManager(object):
         print("\n ** Updating Frontend {}".format(self.stack_name))
 
         # get zappa config
-        print("\n ** Emptying Frontend Bucket Contents".format(self.stack_name))
+        print("  ** Emptying Frontend Bucket Contents".format(self.stack_name))
         root_path, zappa_config = self.get_zappa_config()
         frontend_bucket = S3Bucket(zappa_config["frontend_bucket"])
         if frontend_bucket.exists():
@@ -224,8 +236,7 @@ class StackManager(object):
         # get zappa config
         root_path, zappa_config = self.get_zappa_config()
 
-
-        print("  * Generating endpoint.js...")
+        print("  ** Generating endpoint.js...")
         # Write endpoint.js
         with open(os.path.join(root_path, 'frontend', 'endpoint.js'), 'wt') as endpoint_file:
             root_url_string = (
@@ -235,13 +246,23 @@ class StackManager(object):
             )
             endpoint_file.write(root_url_string)
 
+        # cd to frontend dir
         old_path = os.getcwd()
-        print("  * Generating webpack bundle...")
-        os.chdir('frontend')
-        execute_in_virtualenv(get_current_venv(), 'webpack -p')
+        os.chdir(os.path.join(root_path, "frontend"))
+
+        if not os.path.isdir(os.path.join(root_path, "frontend", "node_modules")):
+            # Missing node deps. install!
+            print("  ** Installing Node.js Dependencies...")
+            subprocess.call('npm i', shell=True, executable="/bin/bash")
+            subprocess.call('npm i --global webpack', shell=True, executable="/bin/bash")
+
+        # Build Webpack
+        print("  ** Generating webpack bundle...")
+        subprocess.call('webpack -p', shell=True, executable="/bin/bash")
         os.chdir(old_path)
 
         # Update pre-launched bucket
+        print("  ** Updating Bucket...")
         frontend_bucket = S3Bucket(zappa_config["frontend_bucket"])
         frontend_bucket.copy_dir(os.path.join(root_path, 'frontend', 'dist'))
 

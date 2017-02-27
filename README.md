@@ -150,7 +150,14 @@ All "dev" stack APIs have `DEBUG_MODE=true` by default. In addition they have CO
 
 Not everything is 100% automated. This is not a perfect list yet, but you must manually:
 
-- Setup your intial hosted zone in Route53
+- Setup your initial hosted zone in Route53
 - Setup your domain identity in SES
 - Add rules to SES for writing inbound emails to S3 (do this after the automation tool creates the S3 buckets with the appropriate policies for you).
 - Initial deployment of the frontend using the AWS static website builder (the automation tool updates this initial configuration) and update the zappa config file.
+- Initial creation of the lambda@edge function re-write urls for react
+    - Create a lambda function with the naming format `donatemates-url-rewrite-<stack_name>`    
+    - Set a CloudFront trigger on the proper distribution on `viewer-request`
+    - Select `Edge Node.js 4.3` as the runtime
+    - Set the handler to be `url_rewrite.handler`
+    - Generate a default role `lambda_basic_execution`
+    - The automation code will update this function's code for you after initially created
