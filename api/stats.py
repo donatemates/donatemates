@@ -54,7 +54,7 @@ class Stats(Resource):
                   "campaign_total_cents": 0,
                   "donation_count": 0,
                   "total_donation_cents": 0}
-        self.campaign_table.scan_table(campaign_count_func, result, "campaign_id")
+        self.campaign_table.scan_table(campaign_count_func, result, "campaign_id, campaign_status, match_cents")
         self.donation_table.scan_table(donation_func, result, "donation_cents")
 
         return result, 200
