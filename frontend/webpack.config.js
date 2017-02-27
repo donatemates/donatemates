@@ -14,15 +14,13 @@ module.exports = {
                 options: {
                     limit: 25000,
                 },
-            },
-            {
+            }, {
                 test: /\.jsx?$/,
                 loader: "babel-loader",
                 query: {
                     presets: ['react', 'es2015']
                 }
-            },
-            {
+            }, {
                 test: /\.less$/,
                 use: [
                     'style-loader',
