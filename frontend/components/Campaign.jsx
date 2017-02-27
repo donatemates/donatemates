@@ -71,7 +71,7 @@ export default class Campaign extends Component {
             <div className="wrapper" id="template-container">
                 <span className="header-label centered" id="header-label">Contribute to</span>
                 <h2 className="campaign-header centered">
-                    { this.state.campaigner_name }&rsquo;s { utils.formatCurrency(this.state.donation_total_cents) } matching campaign for { this.state.charity_name }
+                    { this.state.campaigner_name }&rsquo;s { utils.formatCurrency(this.state.match_cents) } matching campaign for { this.state.charity_name }
                 </h2>
                 <div className="progress-bar">
                     <div
@@ -81,7 +81,7 @@ export default class Campaign extends Component {
                             minWidth: (this.state.donation_total_cents / this.state.match_cents * 100).toFixed(2) + "%"
                         }}>
                             <strong data-content="matchedAmount">
-                                { utils.formatCurrency(this.state.match_cents) }
+                                { utils.formatCurrency(this.state.donation_total_cents) }
                             </strong>&nbsp;
                             (<span data-content="matchedPercentage">
                                 {
