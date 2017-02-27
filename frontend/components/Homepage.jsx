@@ -31,9 +31,16 @@ export default class Homepage extends Component {
             campaigner_email: this.refs.email.value
         };
 
-        fetch(`${ rootUrl }campaign`, {
+        fetch(`${ rootUrl }campaign/`, {
             method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
             body: JSON.stringify(campaign)
+        }).then(res => {
+            res.json().then(json => {
+                console.log(json)
+            })
         });
     }
 
