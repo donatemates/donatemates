@@ -131,8 +131,8 @@ class DonatematesEmail(object):
             None
         """
         email_msg = u"You just created a matching campaign with Donatemates!"
-        email_msg += u"\t\r\nKeep track of your campaign and share with your friends and followers here: https://donatemates.com/campaign/{}. ".format(campaign_id)
-        email_msg += u"\t\r\n  \t\r\nIf you want to cancel your campaign in the future, visit this link: https://donatemates.com/{}/{}".format(campaign_id, secret_id)
+        email_msg += u"\t\r\n \t\r\nKeep track of your campaign and share with your friends and followers here: https://donatemates.com/campaign/{}. ".format(campaign_id)
+        email_msg += u"\t\r\n  \t\r\nIf you want to cancel your campaign in the future, visit this link: https://donatemates.com/cancel/{}/{}".format(campaign_id, secret_id)
 
         subject = u"Donatemates: Campaign Created"
 
