@@ -154,6 +154,7 @@ class CampaignProperties(Resource):
 
         item["donation_url"] = charity["donation_url"]
         item["charity_name"] = charity["conversational_name"]
+        del item["secret_id"]
 
         item = clean_dynamo_response(item)
 
