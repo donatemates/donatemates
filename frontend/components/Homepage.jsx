@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Link, browserHistory } from 'react-router';
+import Link from 'react-router/lib/Link';
+import browserHistory from 'react-router/lib/browserHistory';
 import Loading from './Loading.jsx';
 
 import rootUrl from '../endpoint.js';

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { browserHistory } from 'react-router';
+import browserHistory from 'react-router/lib/browserHistory';
 import NotFound from './NotFound.jsx';
 
 import Loading from './Loading.jsx';

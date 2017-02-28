@@ -1,5 +1,8 @@
 module.exports = {
     entry: './index.jsx',
+    devServer: {
+        historyApiFallback: true
+    },
     output: {
         filename: 'dist/static/bundle.js', //this is the default name, so you can skip it
         //at this directory our bundle file will be available
