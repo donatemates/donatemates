@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
-import {render} from 'react-dom';
-import { Router, Route, IndexRoute, Link, browserHistory } from 'react-router'
+import { render } from 'react-dom';
+import Router from 'react-router/lib/Router'
+import Route from 'react-router/lib/Route'
+import browserHistory from 'react-router/lib/browserHistory'
 
 import css from './style.less';
 

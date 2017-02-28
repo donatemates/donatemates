@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Router, Link } from 'react-router';
+import Router from 'react-router/lib/Router';
+
 
 export default class About extends Component {
 
