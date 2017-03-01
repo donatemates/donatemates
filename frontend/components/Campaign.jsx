@@ -121,7 +121,7 @@ export default class Campaign extends Component {
                 </div>
                 <hr />
                 <p id="active-notice" className="centered">
-                    Donate by clicking <a href={ this.state.donation_url } id="donation-link">here</a>, forward the receipt email to <span data-content="donationEmail">{ this.state.donation_email }</span>, and it'll show up here.
+                    Donate by clicking <a href={ this.state.donation_url } id="donation-link" target="_blank">here</a>, forward the receipt email to <span data-content="donationEmail">{ this.state.donation_email }</span>, and it'll show up here.
                 </p>
                 <p className="footer centered">powered by</p>
                 <a href="/"><h1>donatemates</h1></a>
