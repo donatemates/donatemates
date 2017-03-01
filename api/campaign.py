@@ -163,6 +163,9 @@ class CampaignProperties(Resource):
     def put(self, campaign_id):
         abort(403, description="Missing Authorization Key")
 
+    def post(self, campaign_id):
+        abort(403, description="Missing Authorization Key")
+
 
 class CampaignCancel(Resource):
 
