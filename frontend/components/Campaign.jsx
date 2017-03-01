@@ -144,16 +144,17 @@ export default class Campaign extends Component {
                         id="progress"
                         className="progress"
                         style={{
-                            minWidth: (this.state.donation_total_cents / this.state.match_cents * 100).toFixed(2) + "%"
+                            minWidth: Math.round(this.state.donation_total_cents / this.state.match_cents * 100) + "%"
                         }}>
-                            <strong data-content="matchedAmount">
-                                { utils.formatCurrency(this.state.donation_total_cents) }
-                            </strong>&nbsp;
-                            (<span data-content="matchedPercentage">
-                                {
-                                    (this.state.donation_total_cents / this.state.match_cents * 100).toFixed(2)
-                                }
-                            %</span>)</div>
+                        <strong data-content="matchedAmount">
+                            { utils.formatCurrency(this.state.donation_total_cents) }
+                        </strong>&nbsp;
+                        (<span data-content="matchedPercentage">
+                            {
+                                Math.round(this.state.donation_total_cents / this.state.match_cents * 100)
+                            }
+                        %</span>)
+                    </div>
                 </div>
 
                 { donorSection }
