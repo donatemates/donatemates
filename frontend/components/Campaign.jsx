@@ -67,11 +67,24 @@ export default class Campaign extends Component {
         if (!this.state.donation_url) {
             return (<Loading />);
         }
+
+        let title;
+        if (this.state.campaign_status == "cancelled") {
+            title = this.state.campaigner_name + "'s Campaign (Cancelled)";
+        } else {
+            title = [
+                this.state.campaigner_name,
+                "'s ",
+                utils.formatCurrency(this.state.match_cents),
+                " matching campaign for ",
+                this.state.charity_name
+            ].join('');
+        }
         return (
             <div className="wrapper" id="template-container">
                 <span className="header-label centered" id="header-label">Contribute to</span>
                 <h2 className="campaign-header centered">
-                    { this.state.campaigner_name }&rsquo;s { utils.formatCurrency(this.state.match_cents) } matching campaign for { this.state.charity_name }
+                    { title }
                 </h2>
                 <div className="progress-bar">
                     <div
