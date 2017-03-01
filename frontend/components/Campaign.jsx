@@ -12,7 +12,9 @@ class DonorRow extends Component {
     render() {
         return (
             <div style={{ fontSize: "0.85rem", marginBottom: "0.5em" }}>
-                <strong style={{ fontWeight: "bold" }}>{ this.props.name }</strong>: { utils.formatCurrency(this.props.amount) }
+                <strong style={{ fontWeight: "bold" }}>
+                    { this.props.name }
+                </strong>: { utils.formatCurrency(this.props.amount) }
             </div>
         );
     }
@@ -28,10 +30,11 @@ export default class Campaign extends Component {
             large_donors: [],
             recent_donors: [],
         }
+
+        this.refresh = this.refresh.bind(this);
     }
 
-    componentDidMount() {
-        // TODO: fetch() the campaign here, or redirect to 404.
+    refresh() {
         fetch(`${ rootUrl }campaign/${this.props.params.campaign_id}`).then(res => {
             if (res.ok) {
                 res.json().then(json => {
@@ -56,8 +59,13 @@ export default class Campaign extends Component {
             } else {
                 this.setState({ notFound: true })
             }
-        })
+        });
+    }
 
+    componentDidMount() {
+        // TODO: fetch() the campaign here, or redirect to 404.
+        window.setInterval(this.refresh, 30 * 1000);
+        this.refresh();
     }
 
     render() {
@@ -67,28 +75,29 @@ export default class Campaign extends Component {
         if (!this.state.donation_url) {
             return (<Loading />);
         }
-        return (
-            <div className="wrapper" id="template-container">
-                <span className="header-label centered" id="header-label">Contribute to</span>
-                <h2 className="campaign-header centered">
-                    { this.state.campaigner_name }&rsquo;s { utils.formatCurrency(this.state.match_cents) } matching campaign for { this.state.charity_name }
-                </h2>
-                <div className="progress-bar">
-                    <div
-                        id="progress"
-                        className="progress"
-                        style={{
-                            minWidth: (this.state.donation_total_cents / this.state.match_cents * 100).toFixed(2) + "%"
-                        }}>
-                            <strong data-content="matchedAmount">
-                                { utils.formatCurrency(this.state.donation_total_cents) }
-                            </strong>&nbsp;
-                            (<span data-content="matchedPercentage">
-                                {
-                                    (this.state.donation_total_cents / this.state.match_cents * 100).toFixed(2)
-                                }
-                            %</span>)</div>
-                </div>
+
+        let title, footerText;
+        if (this.state.campaign_status != "active") {
+            title = this.state.campaigner_name + `'s Campaign (${this.state.campaign_status})`;
+            footerText = "";
+        } else {
+            title = [
+                this.state.campaigner_name,
+                "'s ",
+                utils.formatCurrency(this.state.match_cents),
+                " matching campaign for ",
+                this.state.charity_name
+            ].join('');
+            footerText = (
+                <p id="active-notice" className="centered">
+                    Donate by clicking <a href={ this.state.donation_url } id="donation-link">here</a>, forward the receipt email to <span data-content="donationEmail">{ this.state.donation_email }</span>, and it'll show up here.
+                </p>
+            );
+        }
+
+        let donorSection;
+        if (this.state.recent_donors.length > 0) {
+            donorSection = (
                 <div className="container" id="donor-container">
                     <div className="half">
                         <ul>
@@ -119,10 +128,39 @@ export default class Campaign extends Component {
                         </ul>
                     </div>
                 </div>
+            );
+        } else {
+            donorSection = (<div></div>);
+        }
+
+        return (
+            <div className="wrapper" id="template-container">
+                <span className="header-label centered" id="header-label">Contribute to</span>
+                <h2 className="campaign-header centered">
+                    { title }
+                </h2>
+                <div className="progress-bar">
+                    <div
+                        id="progress"
+                        className="progress"
+                        style={{
+                            minWidth: Math.round(this.state.donation_total_cents / this.state.match_cents * 100) + "%"
+                        }}>
+                        <strong data-content="matchedAmount">
+                            { utils.formatCurrency(this.state.donation_total_cents) }
+                        </strong>&nbsp;
+                        (<span data-content="matchedPercentage">
+                            {
+                                Math.round(this.state.donation_total_cents / this.state.match_cents * 100)
+                            }
+                        %</span>)
+                    </div>
+                </div>
+
+                { donorSection }
+
                 <hr />
-                <p id="active-notice" className="centered">
-                    Donate by clicking <a href={ this.state.donation_url } id="donation-link" target="_blank">here</a>, forward the receipt email to <span data-content="donationEmail">{ this.state.donation_email }</span>, and it'll show up here.
-                </p>
+                { footerText }
                 <p className="footer centered">powered by</p>
                 <a href="/"><h1>donatemates</h1></a>
             </div>

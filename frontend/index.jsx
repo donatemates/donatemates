@@ -33,7 +33,6 @@ const routes = {
         { path: 'campaign/:campaign_id', component: Campaign },
         { path: 'cancel/:campaign_id/:secret', component: Cancel },
         { path: '*', component: NotFound },
-    //     { path: 'inbox', component: Inbox },
     ]
 }
 

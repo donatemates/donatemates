@@ -86,6 +86,12 @@ export default class Homepage extends Component {
                                 ref="amount"
                                 placeholder="2,000"
                                 className="with-prefix number"
+                                onChange={ (ev) => {
+                                    ev.target.classList.remove('error');
+                                    if (isNaN(ev.target.value)) {
+                                        ev.target.classList.add('error');
+                                    }
+                                }}
                                 />
                         </div>
                         <div className="half">
@@ -124,7 +130,15 @@ export default class Homepage extends Component {
                                 id="email"
                                 name="campaigner_email"
                                 type="email"
-                                placeholder="Email address" />
+                                placeholder="Email address"
+                                onChange={ (ev) => {
+                                    ev.target.classList.remove('error');
+
+                                    if (!/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(ev.target.value)) {
+                                        ev.target.classList.add('error');
+                                    }
+                                }}
+                                />
                         </div>
                     </div>
                     <button
