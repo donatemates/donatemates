@@ -21,7 +21,7 @@ export default class Cancel extends Component {
 
         this.setState({progressColor: "grey" })
         fetch(`${ rootUrl }campaign/${ this.props.params.campaign_id }/cancel/${ this.props.params.secret }/`, {
-            method: "PUT"
+            method: "POST"
         }).then(res => {
             if (res.ok) {
                 this.setState({ cancelled: true })

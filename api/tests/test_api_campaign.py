@@ -55,19 +55,19 @@ class APICampaignTestMixin(object):
         assert "campaign_id" in response
 
         # Delete
-        rv = self.app.put('/campaign/',
+        rv = self.app.post('/campaign/',
                              follow_redirects=True)
+        self.assertEqual(rv.status_code, 400)
+
+        rv = self.app.post('/campaign/{}'.format(response["campaign_id"]), follow_redirects=True)
+        self.assertEqual(rv.status_code, 500) # TODO: DMK figure out why 500
+        rv = self.app.post('/campaign/{}/'.format(response["campaign_id"]), follow_redirects=True)
         self.assertEqual(rv.status_code, 405)
 
-        rv = self.app.put('/campaign/{}'.format(response["campaign_id"]), follow_redirects=True)
-        self.assertEqual(rv.status_code, 403)
-        rv = self.app.put('/campaign/{}/'.format(response["campaign_id"]), follow_redirects=True)
-        self.assertEqual(rv.status_code, 403)
-
-        rv = self.app.put('/campaign/{}/cancel/{}'.format(response["campaign_id"], "ajkshdfhkjasdf"),
+        rv = self.app.post('/campaign/{}/cancel/{}'.format(response["campaign_id"], "ajkshdfhkjasdf"),
                              follow_redirects=True)
         self.assertEqual(rv.status_code, 403)
-        rv = self.app.put('/campaign/{}/cancel/{}/'.format(response["campaign_id"], "ajkshdfhkjasdf"),
+        rv = self.app.post('/campaign/{}/cancel/{}/'.format(response["campaign_id"], "ajkshdfhkjasdf"),
                              follow_redirects=True)
         self.assertEqual(rv.status_code, 403)
 
@@ -91,7 +91,7 @@ class APICampaignTestMixin(object):
         self.assertEqual(item["campaign_status"], "active")
 
         # Delete
-        rv = self.app.put('/campaign/{}/cancel/{}'.format(response["campaign_id"], item["secret_id"]),
+        rv = self.app.post('/campaign/{}/cancel/{}'.format(response["campaign_id"], item["secret_id"]),
                              follow_redirects=True)
         self.assertEqual(rv.status_code, 204)
 

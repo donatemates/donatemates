@@ -190,7 +190,7 @@ class CampaignCancel(Resource):
                 "dataType": 'string',
                 "paramType": "path"
             }])
-    def put(self, campaign_id, secret_key):
+    def post(self, campaign_id, secret_key):
         """Cancel A Campaign"""
         # Get the campaign
         data = {"campaign_id": campaign_id}

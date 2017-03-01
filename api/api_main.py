@@ -65,8 +65,8 @@ def root():
 
 @app.after_request
 def after_request(response):
-    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization,Accept')
-    response.headers.add('Access-Control-Allow-Methods', 'GET,POST,OPTIONS')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
+    response.headers.add('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
     if is_debug_mode():
         # If in debug mode, allow CORS
         response.headers.add('Access-Control-Allow-Origin', '*')
