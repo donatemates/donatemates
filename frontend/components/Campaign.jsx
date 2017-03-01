@@ -11,11 +11,7 @@ import rootUrl from '../endpoint.js';
 class DonorRow extends Component {
     render() {
         return (
-            <div style={{ fontSize: "0.85rem", marginBottom: "0.5em" }}>
-                <strong style={{ fontWeight: "bold" }}>
-                    { this.props.name }
-                </strong>: { utils.formatCurrency(this.props.amount) }
-            </div>
+            <li>{this.props.amount} from {this.props.name}</li>
         );
     }
 }
@@ -63,7 +59,6 @@ export default class Campaign extends Component {
     }
 
     componentDidMount() {
-        // TODO: fetch() the campaign here, or redirect to 404.
         window.setInterval(this.refresh, 30 * 1000);
         this.refresh();
     }
@@ -89,7 +84,7 @@ export default class Campaign extends Component {
                 this.state.charity_name
             ].join('');
             footerText = (
-                <p id="active-notice" className="centered">
+                <p className="centered">
                     Donate by clicking <a href={ this.state.donation_url } id="donation-link">here</a>, forward the receipt email to <span data-content="donationEmail">{ this.state.donation_email }</span>, and it'll show up here.
                 </p>
             );
