@@ -71,18 +71,15 @@ export default class Campaign extends Component {
             return (<Loading />);
         }
 
-        let title, footerText;
+        let headerText, titleText, footerText;
+
+        titleText = [this.state.campaigner_name, "'s ", utils.formatCurrency(this.state.match_cents), " matching campaign for ", this.state.charity_name].join('');
+
         if (this.state.campaign_status != "active") {
-            title = this.state.campaigner_name + `'s Campaign (${this.state.campaign_status})`;
+            headerText = this.state.campaign_status;
             footerText = "";
         } else {
-            title = [
-                this.state.campaigner_name,
-                "'s ",
-                utils.formatCurrency(this.state.match_cents),
-                " matching campaign for ",
-                this.state.charity_name
-            ].join('');
+            headerText = "Contribute to"
             footerText = (
                 <p id="active-notice" className="centered">
                     Donate by clicking <a href={ this.state.donation_url } id="donation-link">here</a>, forward the receipt email to <span data-content="donationEmail">{ this.state.donation_email }</span>, and it'll show up here.
@@ -130,9 +127,9 @@ export default class Campaign extends Component {
 
         return (
             <div className="wrapper" id="template-container">
-                <span className="header-label centered" id="header-label">Contribute to</span>
+                <span className="header-label centered" id="header-label">{ headerText }</span>
                 <h2 className="campaign-header centered">
-                    { title }
+                    { titleText }
                 </h2>
                 <div className="progress-bar">
                     <div
