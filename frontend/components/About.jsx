@@ -23,7 +23,7 @@ export default class About extends Component {
         }(document, "script", "twitter-wjs"));
         return (
             <div className="wrapper">
-                <h1>donatemates</h1>
+                <a href="/"><h1>{"donatemates"}</h1></a>
                 <p><strong>{"Why?"}</strong></p>
                 <p>
                     {"We built Donatemates because we wanted to make it easy for people to run matching campaigns with their friends and followers. Instead of using Google Sheets and carefully tracking @replies on Twitter, you can just check your email."}
