@@ -5,6 +5,12 @@ import Loading from './Loading.jsx';
 
 import rootUrl from '../endpoint.js';
 
+
+let isValidEmail = function(val) {
+    return (/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(val))
+};
+
+
 export default class Homepage extends Component {
 
     constructor(opts) {
@@ -23,10 +29,16 @@ export default class Homepage extends Component {
 
         // Check each input box for a value. Error if none.
         const inputs = ['name', 'amount', 'charity', 'email'];
+        const inputChecks = {
+            'name': val => (!!val),
+            'amount': val => (!!val && !isNaN(val)),
+            'charity': val => (!!val),
+            'email': val => (!!val && isValidEmail(val))
+        };
         let foundError = false;
         inputs.forEach(i => {
             this.refs[i].classList.remove('error');
-            if (!this.refs[i].value) {
+            if (!inputChecks[i](this.refs[i].value)) {
                 this.refs[i].classList.add('error');
                 foundError = true;
             }
@@ -34,6 +46,7 @@ export default class Homepage extends Component {
         if (foundError) {
             return;
         }
+        return;
 
         let campaign = {
             charity_id: this.refs.charity.value,
@@ -143,7 +156,7 @@ export default class Homepage extends Component {
                                 onChange={ (ev) => {
                                     ev.target.classList.remove('error');
 
-                                    if (!/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(ev.target.value)) {
+                                    if (!isValidEmail(ev.target.value)) {
                                         ev.target.classList.add('error');
                                     }
                                 }}
