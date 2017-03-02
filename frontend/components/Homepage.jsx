@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import Link from 'react-router/lib/Link';
 import browserHistory from 'react-router/lib/browserHistory';
-import Loading from './Loading.jsx';
 
 import rootUrl from '../endpoint.js';
 
@@ -31,7 +30,7 @@ export default class Homepage extends Component {
         const inputs = ['name', 'amount', 'charity', 'email'];
         const inputChecks = {
             'name': val => (!!val),
-            'amount': val => (!!val && !isNaN(val)),
+            'amount': val => (!!val && !isNaN(val.replace(/\,/g,''))),
             'charity': val => (!!val),
             'email': val => (!!val && isValidEmail(val))
         };
@@ -67,9 +66,8 @@ export default class Homepage extends Component {
                 browserHistory.push('/campaign/' + json.campaign_id);
             })
         });
-        this.setState({
-            submitted: true
-        })
+
+        this.refs['button'].innerText = 'Creating campaign...';
     }
 
     componentDidMount() {
@@ -85,9 +83,6 @@ export default class Homepage extends Component {
     }
 
     render() {
-        if (this.state.submitted) {
-            return (<Loading />);
-        }
         return (
             <div className="wrapper">
                 <h1>donatemates</h1>
@@ -110,9 +105,6 @@ export default class Homepage extends Component {
                                 className="with-prefix number"
                                 onChange={ (ev) => {
                                     ev.target.classList.remove('error');
-                                    if (isNaN(ev.target.value)) {
-                                        ev.target.classList.add('error');
-                                    }
                                 }}
                                 />
                         </div>
@@ -143,7 +135,11 @@ export default class Homepage extends Component {
                                 id="name"
                                 name="campaigner_name"
                                 type="text"
-                                placeholder="Joseph Smith" />
+                                placeholder="Joseph Smith"
+                                onChange={ (ev) => {
+                                    ev.target.classList.remove('error');
+                                }}
+                                />
                         </div>
                         <div className="half">
                             <label htmlFor="email">Keep me updated at:</label>
@@ -155,15 +151,12 @@ export default class Homepage extends Component {
                                 placeholder="Email address"
                                 onChange={ (ev) => {
                                     ev.target.classList.remove('error');
-
-                                    if (!isValidEmail(ev.target.value)) {
-                                        ev.target.classList.add('error');
-                                    }
                                 }}
                                 />
                         </div>
                     </div>
                     <button
+                        ref="button"
                         onClick={ this.submitForm }>
                         Create campaign
                     </button>

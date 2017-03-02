@@ -85,8 +85,8 @@ export default class Campaign extends Component {
                 this.state.charity_name
             ].join('');
             footerText = (
-                <p id="active-notice" className="centered">
-                    Donate by clicking <a href={ this.state.donation_url } id="donation-link">here</a>, forward the receipt email to <span data-content="donationEmail">{ this.state.donation_email }</span>, and it'll show up here.
+                <p className="centered">
+                    Donate by clicking <a href={ this.state.donation_url }>here</a>, forward the receipt email to <span data-content="donationEmail">{ this.state.donation_email }</span>, and it'll show up here.
                 </p>
             );
         }
