@@ -23,12 +23,17 @@ export default class Homepage extends Component {
 
         // Check each input box for a value. Error if none.
         const inputs = ['name', 'amount', 'charity', 'email'];
+        let foundError = false;
         inputs.forEach(i => {
             this.refs[i].classList.remove('error');
             if (!this.refs[i].value) {
                 this.refs[i].classList.add('error');
+                foundError = true;
             }
         });
+        if (foundError) {
+            return;
+        }
 
         let campaign = {
             charity_id: this.refs.charity.value,
