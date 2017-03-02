@@ -11,11 +11,7 @@ import rootUrl from '../endpoint.js';
 class DonorRow extends Component {
     render() {
         return (
-            <div style={{ fontSize: "0.85rem", marginBottom: "0.5em" }}>
-                <strong style={{ fontWeight: "bold" }}>
-                    { this.props.name }
-                </strong>: { utils.formatCurrency(this.props.amount) }
-            </div>
+            <li>{this.props.amount} from {this.props.name}</li>
         );
     }
 }
