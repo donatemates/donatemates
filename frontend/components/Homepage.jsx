@@ -21,10 +21,14 @@ export default class Homepage extends Component {
 
         ev.preventDefault();
 
-        if (!this.refs.name.value) { alert("Please provide a valid name."); }
-        if (!this.refs.amount.value) { alert("Please provide a valid amount."); }
-        if (!this.refs.charity.value) { alert("Please provide a valid charity."); }
-        if (!this.refs.email.value) { alert("Please provide a valid email."); }
+        // Check each input box for a value. Error if none.
+        const inputs = ['name', 'amount', 'charity', 'email'];
+        inputs.forEach(i => {
+            this.refs[i].classList.remove('error');
+            if (!this.refs[i].value) {
+                this.refs[i].classList.add('error');
+            }
+        });
 
         let campaign = {
             charity_id: this.refs.charity.value,
