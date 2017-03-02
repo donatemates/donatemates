@@ -59,7 +59,6 @@ export default class Campaign extends Component {
     }
 
     componentDidMount() {
-        // TODO: fetch() the campaign here, or redirect to 404.
         window.setInterval(this.refresh, 30 * 1000);
         this.refresh();
     }
