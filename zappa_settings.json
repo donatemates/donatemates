@@ -1,0 +1,112 @@
+{
+  "common": {
+    "app_function": "api.api_main.app",
+    "aws_region": "us-east-1",
+    "project_name": "donatemates-api",
+    "http_methods": ["GET", "POST", "OPTIONS"],
+    "lets_encrypt_key": "account.key",
+    "manage_roles": false,
+    "environment_variables": {
+      "DEBUG_MODE": "true"
+    },
+    "method_header_types": [
+      "Content-Type",
+      "Location",
+      "Status",
+      "X-Frame-Options",
+      "Set-Cookie",
+      "Access-Control-Allow-Origin",
+      "Access-Control-Allow-Headers",
+      "Access-Control-Allow-Methods"
+    ],
+    "cors": true
+  },
+  "dean": {
+    "extends": "common",
+    "s3_bucket": "api-dean-donatemates",
+    "domain": "api-dean.donatemates.com",
+    "role_name": "dean-lambda-execution-role",
+    "environment_variables": {
+      "STACK_NAME": "dean",
+      "DEBUG_MODE": "true"
+    },
+    "events": [
+      {
+        "function": "dmlambda.process_email_handler",
+        "event_source": {
+          "arn":  "arn:aws:s3:::email-dean-donatemates",
+          "events": [
+            "s3:ObjectCreated:*"
+          ]
+        }
+      }
+    ],
+    "frontend_bucket": "aws-website-donatematesdean-0du7t"
+  },
+  "sahil": {
+    "extends": "common",
+    "s3_bucket": "api-sahil-donatemates",
+    "domain": "api-sahil.donatemates.com",
+    "role_name": "sahil-lambda-execution-role",
+    "environment_variables": {
+      "STACK_NAME": "sahil",
+      "DEBUG_MODE": "true"
+    },
+    "events": [
+      {
+        "function": "dmlambda.process_email_handler",
+        "event_source": {
+          "arn":  "arn:aws:s3:::email-sahil-donatemates",
+          "events": [
+            "s3:ObjectCreated:*"
+          ]
+        }
+      }
+    ],
+    "frontend_bucket": "aws-website-donatematessahil-c9wld"
+  },
+  "jordan": {
+    "extends": "common",
+    "s3_bucket": "api-jordan-donatemates",
+    "domain": "api-jordan.donatemates.com",
+    "role_name": "jordan-lambda-execution-role",
+    "environment_variables": {
+      "STACK_NAME": "jordan",
+      "DEBUG_MODE": "true"
+    },
+    "events": [
+      {
+        "function": "dmlambda.process_email_handler",
+        "event_source": {
+          "arn":  "arn:aws:s3:::email-jordan-donatemates",
+          "events": [
+            "s3:ObjectCreated:*"
+          ]
+        }
+      }
+    ],
+    "frontend_bucket": "aws-website-donatematesjordan-zfwst"
+  },
+  "production": {
+    "extends": "common",
+    "s3_bucket": "api-production-donatemates",
+    "domain": "api.donatemates.com",
+    "role_name": "production-lambda-execution-role",
+    "environment_variables": {
+      "STACK_NAME": "production",
+      "DEBUG_MODE": "false"
+    },
+    "events": [
+      {
+        "function": "dmlambda.process_email_handler",
+        "event_source": {
+          "arn":  "arn:aws:s3:::email-production-donatemates",
+          "events": [
+            "s3:ObjectCreated:*"
+          ]
+        }
+      }
+    ],
+    "frontend_bucket": "aws-website-donatematesproduction-qq161"
+  }
+}

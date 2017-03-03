@@ -1,0 +1,34 @@
+{
+  "dean": {
+    "template": "cloudformation/dynamo-donations.json",
+    "TABLE_NAME": "donations",
+    "READ_CAPACITY": 2,
+    "WRITE_CAPACITY": 2,
+    "SECONDARY_READ_CAPACITY": 2,
+    "SECONDARY_WRITE_CAPACITY": 2
+  },
+  "sahil": {
+    "template": "cloudformation/dynamo-donations.json",
+    "TABLE_NAME": "donations",
+    "READ_CAPACITY": 2,
+    "WRITE_CAPACITY": 2,
+    "SECONDARY_READ_CAPACITY": 2,
+    "SECONDARY_WRITE_CAPACITY": 2
+  },
+  "jordan": {
+    "template": "cloudformation/dynamo-donations.json",
+    "TABLE_NAME": "donations",
+    "READ_CAPACITY": 2,
+    "WRITE_CAPACITY": 2,
+    "SECONDARY_READ_CAPACITY": 2,
+    "SECONDARY_WRITE_CAPACITY": 2
+  },
+  "production": {
+    "template": "cloudformation/dynamo-donations.json",
+    "TABLE_NAME": "donations",
+    "READ_CAPACITY": 5,
+    "WRITE_CAPACITY": 5,
+    "SECONDARY_READ_CAPACITY": 5,
+    "SECONDARY_WRITE_CAPACITY": 5
+  }
+}

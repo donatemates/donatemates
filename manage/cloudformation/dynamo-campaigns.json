@@ -1,0 +1,50 @@
+{
+    "AttributeDefinitions": [
+        {
+            "AttributeName": "campaign_id",
+            "AttributeType": "S"
+        },
+        {
+            "AttributeName": "campaign_status",
+            "AttributeType": "S"
+        },
+        {
+            "AttributeName": "notified_on",
+            "AttributeType": "S"
+        }
+    ],
+    "KeySchema": [
+        {
+            "AttributeName": "campaign_id",
+            "KeyType": "HASH"
+        }
+    ],
+    "GlobalSecondaryIndexes": [
+        {
+            "IndexName": "ActiveIndex",
+            "KeySchema": [
+                {
+                    "AttributeName": "campaign_status",
+                    "KeyType": "HASH"
+                },
+                {
+                    "AttributeName": "notified_on",
+                    "KeyType": "RANGE"
+                }
+            ],
+            "Projection": {
+                "ProjectionType": "INCLUDE",
+                "NonKeyAttributes": ["campaign_id"]
+
+            },
+            "ProvisionedThroughput": {
+                "ReadCapacityUnits": <SECONDARY_READ_CAPACITY>,
+                "WriteCapacityUnits": <SECONDARY_WRITE_CAPACITY>
+            }
+        }
+    ],
+    "ProvisionedThroughput": {
+        "ReadCapacityUnits": <READ_CAPACITY>,
+        "WriteCapacityUnits": <WRITE_CAPACITY>
+    }
+}

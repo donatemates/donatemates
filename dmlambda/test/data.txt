@@ -1,0 +1,426 @@
+Return-Path: <j6k4m8@gmail.com>
+Received: from mail-yw0-f174.google.com (mail-yw0-f174.google.com [209.85.161.174])
+ by inbound-smtp.us-east-1.amazonaws.com with SMTP id ul9k7a2fdp9pjhsel0njq4t7v4c7tsf8s2b08eg1
+ for testing@donatemates.com;
+ Thu, 02 Feb 2017 21:54:13 +0000 (UTC)
+X-SES-Spam-Verdict: PASS
+X-SES-Virus-Verdict: PASS
+Received-SPF: pass (spfCheck: domain of _spf.google.com designates 209.85.161.174 as permitted sender) client-ip=209.85.161.174; envelope-from=j6k4m8@gmail.com; helo=mail-yw0-f174.google.com;
+Authentication-Results: amazonses.com;
+ spf=pass (spfCheck: domain of _spf.google.com designates 209.85.161.174 as permitted sender) client-ip=209.85.161.174; envelope-from=j6k4m8@gmail.com; helo=mail-yw0-f174.google.com;
+ dkim=pass header.i=@gmail.com;
+X-SES-RECEIPT: AEFBQUFBQUFBQUFHSFFFdmRTOGozNk1qVFhOSFB2VVIrUWsvNU1CN0J1dzdyQloyaVFpZjIxU3pIWUM0S3RRVE0ybjdXbmJldVJZMTF3RlpxaWtOMVRnTzcrMWYxMm45eHpGamlEWHBLSFRYSlNQdzN6QldvU09YajRidDhUZElGR2V3RnFzaENhWDZDNkZxVGxyZ3pwc21QQkdRTnJiKzdCZUNrVk90ODdUQ3JWNWVDZ0xpbTgzR1J1ZXEzd0lIT2dqOUlEZkRCd1dvclJhVUpnN2VhdHBzMmxjY2ZhQmlSNVFGeldGK1Y5T3JzRm1Wam55T3Z6anB2OStxYkJkbm5keU9PemgrUW1RL3kxL2dWdDRURUVrb2xndXhsZTl6Qg==
+X-SES-DKIM-SIGNATURE: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=6gbrjpgwjskckoa6a5zn6fwqkn67xbtw; d=amazonses.com; t=1486072442;
+	h=X-SES-RECEIPT:MIME-Version:From:Date:Message-ID:Subject:To:Content-Type;
+	bh=DIwFP8napmcv33OD66G5oVa7yVoYCptOmvIplpWVX+o=;
+	b=QkEFdNpWjmWLJTOjnjT3y5IR0+Vt1jEtV6saFYdAIbjW+dZnk3l+AGRtQdWxEhfE
+	+xV0kEchmh2mfp7f/QU5BHDVNUi83wWbiUS1sildO60BJcTJG6kW1zz7xtBtdUI73Vm
+	2OmENiMY1DOvtDS5nruRbe+YYSnpWHwTakBr/qMY=
+Received: by mail-yw0-f174.google.com with SMTP id w75so792649ywg.1
+        for <testing@donatemates.com>; Thu, 02 Feb 2017 13:54:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=10elohQOMy7k0l+6M/SZUtPXBLeMHPwJv99ymzzI1hg=;
+        b=niRtwnQN3eddbTxF8W3JPX2EiDsUbVqp/uDESfKZmuW24mNB7r/1AujUYb7UNDtvdm
+         eObHdrB8NxZaiFRgEF8YkEs6Agws5lLGH5+7y1SO4KpJjYLWXqXe37n3SbW2+xTsYFHC
+         mCinlnp8coXKkF6wROUrmPrP88fdXjnGL1L4jCJ3ShqNGSgJwIF6hZ3vP9n43fb5aoRj
+         +OYG7cD00L7YFYPHKWykiKpE4unk4hGza6SyUBja2LRhEpHlA6nQKl8V0sNWFrl4WHX7
+         cQZr8UvitjBgF08yOZIkkOk1F4gdq13xcDgjG4ZfPoRpic7exvlLbsUQgubjfqZLyQHc
+         0DCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=10elohQOMy7k0l+6M/SZUtPXBLeMHPwJv99ymzzI1hg=;
+        b=kpSuknmmajwO0DWOqA0YEeLM/sckNuKYl5TOJbUh4dn+1jQCQxfAuvNlDz3JC+uapt
+         H6faMGnTUEs5Kah+Ri1fuiis/61H0at/n9GBHtTa+9eZRPYrg4wflWExxs+wz4KmUl3K
+         ftNl9EAS07sH7SsPqcKsTNX5QWVpHH01/sVp1bSV4txnty5Jtd4yxROuwA9pWpmy+Yex
+         WczHhjizXaLwLt+KUPL/xumATgfodyU5twACiMz7qZ1sBDiZ8S0RLGvjOsoFShuV/Dlu
+         fIAM7wFMPGl77GqSbhN7gsg8QiCDil5nMYHv/vXmitJca8NwDwXlIrLhHqUUZvam2ABe
+         CDmA==
+X-Gm-Message-State: AIkVDXJ8cpIucfbZv2mjI6mPQFuafC51SDpO5Vg/xANUDFejKBXFb+Iu+ho/BrlSzQs1S1fTMtwnIbi2rN9twg==
+X-Received: by 10.13.233.4 with SMTP id s4mr7141674ywe.310.1486072452478; Thu,
+ 02 Feb 2017 13:54:12 -0800 (PST)
+MIME-Version: 1.0
+References: <9ee76b43aad3d0a14d1ee2317b102010@endpointb3649865.chios.panth.io>
+In-Reply-To: <9ee76b43aad3d0a14d1ee2317b102010@endpointb3649865.chios.panth.io>
+From: Jordan Matelsky <j6k4m8@gmail.com>
+Date: Thu, 02 Feb 2017 21:54:02 +0000
+Message-ID: <CAG8xZ=piLkxjd6OxVabLtTbGCnDw+vBSnk96zUQ+kurC2Sn5kA@mail.gmail.com>
+Subject: Fwd: Thank you for your gift to the ACLU
+To: "testing@donatemates.com" <testing@donatemates.com>
+Content-Type: multipart/alternative; boundary=94eb2c0758a6a4038f05479334b6
+
+--94eb2c0758a6a4038f05479334b6
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+---------- Forwarded message ---------
+From: Anthony D. Romero, ACLU <Membership@aclu.org>
+Date: Sun, Jan 29, 2017 at 10:33 PM
+Subject: Thank you for your gift to the ACLU
+To: <j6k4m8@gmail.com>
+
+
+Dear Jordan,
+
+Thank you so much for your generous gift of $54.00 to the American Civil
+Liberties Union. With the help of members like you, we will stand strong in
+defense of freedom.
+
+This is a critical time for our country, and for the ACLU. People are
+counting on us to stand up to Donald Trump and anyone else who tries to
+advance unconstitutional assaults on our rights.
+
+Thanks to you, they will face the strongest ACLU in the 100-year history of
+our organization. We are ready. And I am confident that with supporters
+like you at our side, in the end liberty and justice will prevail.
+
+Thank you for standing with us.
+
+With gratitude,
+
+Anthony D. Romero
+Executive Director
+American Civil Liberties Union
+
+*Connect with the ACLU*
+
+   - Download and print
+   <https://www.aclu.org/files/member/ACLU-2016-Membership-Card.pdf> your
+   temporary membership card (your permanent card will arrive in the mail s=
+oon
+   if you are a new member).
+   - Tell us
+   <https://www.aclu.org/secure/thank-you-your-gift-aclu?ms=3Dmem_donatecon=
+firm>
+   why you support the ACLU.
+   - Let others know where you stand.
+   <https://shop.aclu.org/?ms=3Dmem_donateconfirm&a=3Ddonateconfirm> Get yo=
+ur
+   ACLU t-shirt, cap, and more at our store. Use code *MEMBER15* at
+   checkout for a discount.
+   - If you haven't already, become a Guardian of Liberty=E2=80=94a monthly=
+ donor
+   <https://action.aclu.org/secure/fight-back-against-attacks-our-civil-lib=
+erties-30?ms=3Dweb_donateconfirm>=E2=80=94and
+   help provide the consistent resources we need to respond to any threat.
+   - Visit the ACLU Action Center
+   <https://www.aclu.org/action?ms=3Dweb_donateconfirm> and help us fight f=
+or
+   civil liberties.
+
+Please print or save this mesage for your personal records.
+
+*Donation Information*
+
+*Donation Form: *
+
+Become a Freedom Fighter =E2=80=94 Join the ACLU
+
+*Confirmation Code:*
+
+1432780
+
+*Gift Amount: *
+
+$54.00
+
+*Gift Type: *
+
+One-time
+
+
+Note: Contributions to the American Civil Liberties Union are not tax
+deductible. To learn more click here
+<https://www.aclu.org/unionandfoundation>.
+
+American Civil Liberties Union
+125 Broad Street, 18th Floor
+New York, NY 10004-2400
+Tel: 212-549-2500 <(212)%20549-2500>
+https://www.aclu.org/
+
+--94eb2c0758a6a4038f05479334b6
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><br><br><div class=3D"gmail_quote"><div dir=3D"ltr">------=
+---- Forwarded message ---------<br>From: Anthony D. Romero, ACLU &lt;<a hr=
+ef=3D"mailto:Membership@aclu.org">Membership@aclu.org</a>&gt;<br>Date: Sun,=
+ Jan 29, 2017 at 10:33 PM<br>Subject: Thank you for your gift to the ACLU<b=
+r>To:  &lt;<a href=3D"mailto:j6k4m8@gmail.com">j6k4m8@gmail.com</a>&gt;<br>=
+</div><br><br><p class=3D"gmail_msg">
+
+=09
+
+</p>
+
+<p class=3D"gmail_msg"></p><p class=3D"gmail_msg">Dear Jordan,
+
+<br class=3D"gmail_msg"><br class=3D"gmail_msg">Thank you so much for your =
+generous gift of $54.00 to the American =20
+
+Civil Liberties Union. With the help of members like you, we will stand =20
+
+strong in defense of freedom.
+
+<br class=3D"gmail_msg"><br class=3D"gmail_msg">
+
+This is a critical time for our country, and for the ACLU. People are =20
+
+counting on us to stand up to Donald Trump and anyone else who tries to =20
+
+advance unconstitutional assaults on our rights.  <br class=3D"gmail_msg"><=
+br class=3D"gmail_msg">
+
+
+
+Thanks to you, they will face the strongest ACLU in the 100-year history of=
+ =20
+
+our organization.  We are ready.  And I am confident that with supporters =
+=20
+
+like you at our side, in the end liberty and justice will prevail. <br clas=
+s=3D"gmail_msg"><br class=3D"gmail_msg">
+
+
+
+Thank you for standing with us.
+
+
+
+<br class=3D"gmail_msg">
+
+<br class=3D"gmail_msg">
+
+With gratitude,<br class=3D"gmail_msg"><br class=3D"gmail_msg">
+
+Anthony D. Romero<br class=3D"gmail_msg">
+
+Executive Director<br class=3D"gmail_msg">
+
+American Civil Liberties Union<br class=3D"gmail_msg"><br class=3D"gmail_ms=
+g">
+
+
+
+<em class=3D"gmail_msg">Connect with the ACLU</em></p>
+
+
+
+<ul class=3D"gmail_msg"><li style=3D"font-family:Georgia,serif;font-size:12=
+pt" class=3D"gmail_msg"><a href=3D"https://www.aclu.org/files/member/ACLU-2=
+016-Membership-Card.pdf" rel=3D"nofollow" style=3D"font-weight:bold;text-de=
+coration:underline;color:rgb(0,84,136)" class=3D"gmail_msg" target=3D"_blan=
+k">Download and print</a> your temporary =20
+
+membership card (your permanent card will arrive in the mail soon if you ar=
+e =20
+
+a new member).</li>
+
+<li style=3D"font-family:Georgia,serif;font-size:12pt" class=3D"gmail_msg">=
+<a href=3D"https://www.aclu.org/secure/thank-you-your-gift-aclu?ms=3Dmem_do=
+nateconfirm" style=3D"font-weight:bold;text-decoration:underline;color:rgb(=
+0,84,136)" class=3D"gmail_msg" target=3D"_blank">Tell us</a> why you suppor=
+t the ACLU.</li>
+
+<li style=3D"font-family:Georgia,serif;font-size:12pt" class=3D"gmail_msg">=
+<a href=3D"https://shop.aclu.org/?ms=3Dmem_donateconfirm&amp;a=3Ddonateconf=
+irm" style=3D"font-weight:bold;text-decoration:underline;color:rgb(0,84,136=
+)" class=3D"gmail_msg" target=3D"_blank">Let others know where you stand.</=
+a> Get your ACLU =20
+
+t-shirt, cap, and more at our store. Use code <strong class=3D"gmail_msg">M=
+EMBER15</strong> at =20
+
+checkout for a discount.</li>
+
+<li style=3D"font-family:Georgia,serif;font-size:12pt" class=3D"gmail_msg">=
+<a href=3D"https://action.aclu.org/secure/fight-back-against-attacks-our-ci=
+vil-liberties-30?ms=3Dweb_donateconfirm" style=3D"font-weight:bold;text-dec=
+oration:underline;color:rgb(0,84,136)" class=3D"gmail_msg" target=3D"_blank=
+">If you haven&#39;t already, become a Guardian of =20
+
+Liberty=E2=80=94a monthly donor</a>=E2=80=94and help provide the consistent=
+ =20
+
+resources we need to respond to any threat.</li>
+
+<li style=3D"font-family:Georgia,serif;font-size:12pt" class=3D"gmail_msg">=
+<a href=3D"https://www.aclu.org/action?ms=3Dweb_donateconfirm" style=3D"fon=
+t-weight:bold;text-decoration:underline;color:rgb(0,84,136)" class=3D"gmail=
+_msg" target=3D"_blank">Visit the ACLU Action Center</a> and help us fight =
+for civil =20
+
+liberties.</li>
+
+</ul>
+
+<p class=3D"gmail_msg">Please print or save this mesage for your personal r=
+ecords.</p><br class=3D"gmail_msg"><p></p>
+
+<table style=3D"border-bottom:black 3px double;border-left:black 3px double=
+;background-color:white;border-spacing:0px;width:100%;border-collapse:colla=
+pse;border-top:black 3px double;border-right:black 3px double" border=3D"1"=
+ cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" class=3D"gmail_msg">
+
+	<tbody class=3D"gmail_msg">
+
+		<tr style=3D"border-bottom:black 1px solid;border-left:black 1px solid;ba=
+ckground-color:white;border-spacing:0px;border-collapse:collapse;border-top=
+:black 1px solid;border-right:black 1px solid" class=3D"gmail_msg">
+
+			<td colspan=3D"2" style=3D"padding-bottom:3pt;padding-left:3pt;padding-r=
+ight:3pt;background:none transparent scroll repeat 0% 0%;padding-top:3pt" c=
+lass=3D"gmail_msg">
+
+				<p style=3D"text-align:center" class=3D"gmail_msg"><b class=3D"gmail_ms=
+g"><span class=3D"gmail_msg">Donation =20
+
+Information</span></b></p>
+
+			</td>
+
+		</tr>
+
+		<tr style=3D"border-bottom:black 1px solid;border-left:black 1px solid;ba=
+ckground-color:white;border-spacing:0px;border-collapse:collapse;border-top=
+:black 1px solid;border-right:black 1px solid" class=3D"gmail_msg">
+
+			<td style=3D"padding-bottom:3pt;padding-left:3pt;width:25%;padding-right=
+:3pt;border-right:black 1px solid;padding-top:3pt" nowrap width=3D"25%" cla=
+ss=3D"gmail_msg">
+
+				<p class=3D"gmail_msg"><b class=3D"gmail_msg"><span class=3D"gmail_msg"=
+>Donation Form:=C2=A0</span></b><span class=3D"gmail_msg"> =20
+
+</span></p>
+
+			</td>
+
+			<td style=3D"padding-bottom:3pt;padding-left:3pt;width:90%;padding-right=
+:3pt;padding-top:3pt" width=3D"90%" class=3D"gmail_msg">
+
+				<p class=3D"gmail_msg"><span class=3D"gmail_msg">Become a Freedom Fight=
+er =E2=80=94 Join the =20
+
+ACLU</span></p>
+
+			</td>
+
+		</tr>
+
+		<tr style=3D"border-bottom:black 1px solid;border-left:black 1px solid;ba=
+ckground-color:white;border-spacing:0px;border-collapse:collapse;border-top=
+:black 1px solid;border-right:black 1px solid" class=3D"gmail_msg">
+
+			<td style=3D"padding-bottom:3pt;padding-left:3pt;width:25%;padding-right=
+:3pt;border-right:black 1px solid;padding-top:3pt" nowrap width=3D"25%" cla=
+ss=3D"gmail_msg">
+
+				<p class=3D"gmail_msg"><b class=3D"gmail_msg"><span class=3D"gmail_msg"=
+>Confirmation Code:</span></b><span class=3D"gmail_msg"> </span></p>
+
+			</td>
+
+			<td style=3D"padding-bottom:3pt;padding-left:3pt;width:90%;padding-right=
+:3pt;padding-top:3pt" width=3D"90%" class=3D"gmail_msg">
+
+				<p class=3D"gmail_msg">1432780</p>
+
+			</td>
+
+		</tr>
+
+		<tr style=3D"border-bottom:black 1px solid;border-left:black 1px solid;ba=
+ckground-color:white;border-spacing:0px;border-collapse:collapse;border-top=
+:black 1px solid;border-right:black 1px solid" class=3D"gmail_msg">
+
+			<td style=3D"padding-bottom:3pt;padding-left:3pt;width:25%;padding-right=
+:3pt;border-right:black 1px solid;padding-top:3pt" nowrap width=3D"25%" cla=
+ss=3D"gmail_msg">
+
+				<p class=3D"gmail_msg"><b class=3D"gmail_msg"><span class=3D"gmail_msg"=
+>Gift Amount:=C2=A0</span></b><span class=3D"gmail_msg"> =20
+
+</span></p>
+
+			</td>
+
+			<td style=3D"padding-bottom:3pt;padding-left:3pt;width:90%;padding-right=
+:3pt;padding-top:3pt" width=3D"90%" class=3D"gmail_msg">
+
+				<p class=3D"gmail_msg"><span class=3D"gmail_msg">$54.00 </span></p>
+
+			</td>
+
+		</tr>
+
+		<tr style=3D"border-bottom:black 1px solid;border-left:black 1px solid;ba=
+ckground-color:white;border-spacing:0px;border-collapse:collapse;border-top=
+:black 1px solid;border-right:black 1px solid" class=3D"gmail_msg">
+
+			<td style=3D"padding-bottom:3pt;padding-left:3pt;width:25%;padding-right=
+:3pt;border-right:black 1px solid;padding-top:3pt" nowrap width=3D"25%" cla=
+ss=3D"gmail_msg">
+
+				<p class=3D"gmail_msg"><b class=3D"gmail_msg"><span class=3D"gmail_msg"=
+>Gift Type:=C2=A0</span></b><span class=3D"gmail_msg"> =20
+
+</span></p>
+
+			</td>
+
+			<td style=3D"padding-bottom:3pt;padding-left:3pt;width:90%;padding-right=
+:3pt;padding-top:3pt" width=3D"90%" class=3D"gmail_msg">
+
+				<p class=3D"gmail_msg"><span class=3D"gmail_msg">One-time </span></p>
+
+			</td>
+
+		</tr>
+
+	</tbody>
+
+</table>
+
+<div style=3D"text-align:center" align=3D"center" class=3D"gmail_msg">=C2=
+=A0</div>
+
+<p class=3D"gmail_msg"><span class=3D"gmail_msg">Note: Contributions to the=
+ =20
+
+American Civil Liberties Union are not tax deductible. To learn more <a hre=
+f=3D"https://www.aclu.org/unionandfoundation" style=3D"color:#005489" class=
+=3D"gmail_msg" target=3D"_blank">click =20
+
+here</a>.</span></p>
+
+<div class=3D"gmail_msg">
+
+	<p align=3D"center" class=3D"gmail_msg"><span style=3D"font-size:12pt" cla=
+ss=3D"gmail_msg">American Civil Liberties Union<br class=3D"gmail_msg">
+
+		125 Broad Street, 18th Floor<br class=3D"gmail_msg">
+
+		New York, NY 10004-2400<br class=3D"gmail_msg">
+
+		Tel: <a href=3D"tel:(212)%20549-2500" value=3D"+12125492500" class=3D"gma=
+il_msg" target=3D"_blank">212-549-2500</a><br class=3D"gmail_msg">
+
+		<a href=3D"https://www.aclu.org/" style=3D"color:#005489" class=3D"gmail_=
+msg" target=3D"_blank">https://www.aclu.org/</a></span></p>
+
+</div>
+
+
+
+
+</div></div>
+
+--94eb2c0758a6a4038f05479334b6--

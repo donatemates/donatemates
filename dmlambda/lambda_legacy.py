@@ -7,7 +7,6 @@ import boto3
 
 """
 Messages in a dictionary form should adhere to the following spec:
-
 {
     'from': str
     'to': str
@@ -16,10 +15,8 @@ Messages in a dictionary form should adhere to the following spec:
     'subject': str
     ...
 }
-
 Messages can hold any EXTRA fields, but most have at LEAST these fields.
 For instance,
-
 {
     'aclu_confirmation_code': '12345',
     'from': 'Donald Frump <thefrumpinator@yahoo.net>',
@@ -27,11 +24,11 @@ For instance,
     'amount': '$200.00', 'date': 'Thu, 01 Feb 2015 21:54:02 +0000',
     'subject': 'Fwd: Thank you for your gift to the ACLU'
 }
-
 is a valid dictionary.
 """
 
 s3 = boto3.client('s3')
+dyanamo = boto3.client('dynamodb')
 
 """
 Organization parsers
@@ -134,7 +131,13 @@ def lambda_handler(event, context):
     try:
         response = s3.get_object(Bucket=bucket, Key=key)
         message_parsed = parse_email(response['Body'].read())
+        
         print("MESSAGE: " + json.dumps(message_parsed))
+        
+        dynamodb.put_item(
+            TableName="DonateMatesTest", 
+            Item=message_parsed
+        )
         return message_parsed
     except Exception as e:
         print(e)

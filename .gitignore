@@ -1,0 +1,13 @@
+dm-env/
+.DS_Store
+/.idea
+/account.key
+*.pyc
+/frontend/Archive.zip
+*ignore*
+/frontend/endpoint.js
+/frontend/node_modules
+/frontend/dist/bundle.js
+/frontend/dist/static/bundle.js
+/manage/backup/node_modules
+/manage/lambda_package.zip
