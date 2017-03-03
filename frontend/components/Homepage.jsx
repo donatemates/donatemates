@@ -45,7 +45,6 @@ export default class Homepage extends Component {
         if (foundError) {
             return;
         }
-        return;
 
         let campaign = {
             charity_id: this.refs.charity.value,
@@ -65,6 +64,9 @@ export default class Homepage extends Component {
             res.json().then(json => {
                 browserHistory.push('/campaign/' + json.campaign_id);
             })
+        }).catch(err => {
+            alert("Failed to create campaign, try again in a few minutes!");
+            console.error(err);
         });
 
         this.refs['button'].innerText = 'Creating campaign...';
